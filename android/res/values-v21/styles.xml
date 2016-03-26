@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <style name="GdxTheme" parent="android:Theme">
+                <item name="android:windowBackground">@android:color/transparent</item>
+                <item name="android:colorBackgroundCacheHint">@null</item>
+                <item name="android:windowAnimationStyle">@android:style/Animation</item>
+                <item name="android:windowNoTitle">true</item>
+                <item name="android:windowContentOverlay">@null</item>
+                <item name="android:windowFullscreen">true</item>
+                <item name="android:colorPrimary">#3F51B5</item>
+                <item name="android:colorPrimaryDark">#303F9F</item>
+                <item name="android:colorAccent">#FF4081</item>
+        </style>
+</resources>
