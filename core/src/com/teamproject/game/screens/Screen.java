@@ -1,4 +1,4 @@
-package com.teamproject.game.states;
+package com.teamproject.game.screens;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  *
  * This abstract class is template for different state class.
  */
-public abstract class State {
+public abstract class Screen {
 
-    protected OrthographicCamera camera;    //It shows some state of game.
-    protected GameStateManager gsm;         //It manages with different states.
+    protected OrthographicCamera camera;        //It shows some state of game.
+    protected GameScreenManager gsm;            //It manages with different states.
 
 
-    public State(GameStateManager gsm) {
+    public Screen(GameScreenManager gsm) {
         this.gsm = gsm;
         camera = new OrthographicCamera();
     }

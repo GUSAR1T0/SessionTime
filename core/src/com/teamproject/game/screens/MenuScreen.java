@@ -1,4 +1,4 @@
-package com.teamproject.game.states;
+package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  * - setting parameters of orthographic camera;
  * - drawing background and icons of buttons.
  */
-public class MenuState extends State {
+public class MenuScreen extends Screen {
 
     private static final float SCALING_FACTOR = (float) Gdx.graphics.getHeight() / 2880 ;
     private static final String MENU_BACKGROUND = "menu_background_2560x1600.png";
@@ -20,7 +20,7 @@ public class MenuState extends State {
     private Texture background;
     private Sprite button1, button2, button3;
 
-    public MenuState(GameStateManager gsm) {
+    public MenuScreen(GameScreenManager gsm) {
         super(gsm);
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 

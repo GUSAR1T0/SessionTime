@@ -4,8 +4,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.teamproject.game.states.GameStateManager;
-import com.teamproject.game.states.MenuState;
+import com.teamproject.game.screens.GameScreenManager;
+import com.teamproject.game.screens.MenuScreen;
 
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
@@ -15,15 +15,15 @@ import com.teamproject.game.states.MenuState;
 public class SessionTime extends ApplicationAdapter {
 
 	SpriteBatch batch;
-	GameStateManager gsm;
+	GameScreenManager gsm;
 	
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
-		gsm = new GameStateManager();
+		gsm = new GameScreenManager();
 
 		Gdx.gl.glClearColor(0, 0, 0.5f, 1);
-		gsm.push(new MenuState(gsm));
+		gsm.push(new MenuScreen(gsm));
 	}
 
 	@Override
