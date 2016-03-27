@@ -1,0 +1,29 @@
+package com.teamproject.game.additions;
+
+import com.badlogic.gdx.Gdx;
+
+/**
+ * Created by Roman_Mashenkin on 27.03.2016.
+ *
+ * This structure set all needful constants.
+ */
+public class Constant {
+
+    //Size of Desktop application
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
+
+    //Title of game
+    public static final String TITLE = "Session Time";
+
+    //Scaling factor for Android devices
+    public static final float SCALING_FACTOR = (float) Gdx.graphics.getHeight() / 2880 ;
+
+    //Setting of sequence of English and Russian letters, numerals and special chars
+    public static final String FONT_CHARS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
+            "abcdefghijklmnopqrstuvwxyz" + "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
+
+    //Path to background texture
+    public static final String MENU_BACKGROUND = "menu_background_2560x1600.png";
+}
