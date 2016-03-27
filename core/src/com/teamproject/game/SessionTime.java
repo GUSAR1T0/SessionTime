@@ -16,7 +16,7 @@ public class SessionTime extends ApplicationAdapter {
 
 	SpriteBatch batch;
 	GameScreenManager gsm;
-	
+
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
@@ -29,6 +29,7 @@ public class SessionTime extends ApplicationAdapter {
 	@Override
 	public void render() {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+//		gsm.update(Gdx.graphics.getDeltaTime());
 		gsm.render(batch);
 	}
 
