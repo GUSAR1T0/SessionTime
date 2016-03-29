@@ -22,7 +22,9 @@ public class SettingScreen implements Screen {
 
         stage = new Stage(new StretchViewport(Constant.WORLD_WIDTH,
                 Constant.WORLD_HEIGHT * Constant.RATIO));
-        Gdx.input.setInputProcessor(stage);    }
+        Gdx.input.setInputProcessor(stage);
+    }
+
     @Override
     public void show() {
 

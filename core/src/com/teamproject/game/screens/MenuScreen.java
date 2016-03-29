@@ -2,6 +2,7 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -60,7 +61,10 @@ public class MenuScreen implements Screen {
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game));
+                FileHandle file = Gdx.files.internal("person.log");
+
+                if (file.length() > 0) game.setScreen(new GameMenuScreen(game));
+                else if (file.length() == 0) game.setScreen(new LoginScreen(game));
             }
         });
 
@@ -76,7 +80,7 @@ public class MenuScreen implements Screen {
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new GameMenuScreen(game));
             }
         });
 
@@ -103,7 +107,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-
         //Adding elements on table
         table.add(playButton).height(playButton.getHeight()).expandX();
         table.add(settingButton).height(settingButton.getHeight()).expandX();
@@ -151,6 +154,5 @@ public class MenuScreen implements Screen {
     public void dispose() {
         background.dispose();
         stage.dispose();
-        game.dispose();
     }
 }

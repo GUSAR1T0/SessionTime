@@ -31,6 +31,7 @@ public class Constant {
             "abcdefghijklmnopqrstuvwxyz" + "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 
-    //Path to background texture
+    //Path to backgrounds texture
     public static final String MENU_BACKGROUND = "menu_background_2560x1600.png";
+    public static final String MENU_BACKGROUND_2 = "menu_background_2560x1600_2.png";
 }
