@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constant;
 
@@ -15,19 +14,16 @@ import com.teamproject.game.additions.Constant;
  * Created by Roman_Mashenkin on 28.03.2016.
  */
 public class GameMenuScreen implements Screen {
+    // TODO: 02.04.2016, make realization main idea of game or menu of mini-games
 
     private OrthographicCamera camera;
     private Stage stage;
     private Texture background;
     private STGame game;
 
-    private String name;
-    private int specialty;
-
     public GameMenuScreen(STGame game) {
 
         this.game = game;
-        name = "";
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
@@ -35,16 +31,18 @@ public class GameMenuScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        background = new Texture(Gdx.files.internal(Constant.MENU_BACKGROUND_2));
+        background = new Texture(Gdx.files.internal(Constant.MENU_BACKGROUND));
 
         readPersonData();
     }
 
     public void readPersonData() {
 
-        FileHandle file = Gdx.files.internal("person.log");
+        FileHandle file = Gdx.files.local(Constant.PERSON);
         String tmpString = file.readString();
-        int i = 0;
+
+        String name = "";
+        int specialty, i = 0;
 
         while (true) {
             if (tmpString.charAt(i) != '\n') {
@@ -63,8 +61,10 @@ public class GameMenuScreen implements Screen {
 
         specialty = Integer.parseInt(tmp);
 
-        Gdx.app.log("1", name);
-        Gdx.app.log("2", specialty + "");
+        //Debugging values of name & specialty
+        //P.S. Truly value of length of "name" equals name.length() - 1
+//        Gdx.app.log("NAME", name);
+//        Gdx.app.log("SPECIALTY", specialty + "");
     }
 
     @Override

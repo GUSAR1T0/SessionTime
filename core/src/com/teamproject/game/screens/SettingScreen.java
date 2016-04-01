@@ -3,6 +3,7 @@ package com.teamproject.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
@@ -12,13 +13,17 @@ import com.teamproject.game.additions.Constant;
  * Created by Roman_Mashenkin on 28.03.2016.
  */
 public class SettingScreen implements Screen {
+    // TODO: 02.04.2016, make screen of settings with different parameters
 
     private Stage stage;
+    private Texture background;
     private STGame game;
 
     public SettingScreen(STGame game) {
 
         this.game = game;
+
+        background = new Texture(Gdx.files.internal(Constant.MENU_BACKGROUND));
 
         stage = new Stage(new StretchViewport(Constant.WORLD_WIDTH,
                 Constant.WORLD_HEIGHT * Constant.RATIO));

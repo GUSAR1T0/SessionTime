@@ -31,7 +31,13 @@ public class Constant {
             "abcdefghijklmnopqrstuvwxyz" + "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 
-    //Path to backgrounds texture
-    public static final String MENU_BACKGROUND = "menu_background_2560x1600.png";
-    public static final String MENU_BACKGROUND_2 = "menu_background_2560x1600_2.png";
+    //Path to textures
+    public static final String MENU_BACKGROUND = "data/images/menu_background_2560x1600.png";
+    public static final String LOGO = "data/images/logo.png";
+
+    //Path to file of authorization
+    public static final String PERSON = "person";
+
+    //Path to file of style
+    public static final String SKIN = "data/styles/uiskin.json";
 }
