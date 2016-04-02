@@ -14,8 +14,8 @@ public class Constant {
     public static final int HEIGHT = 720;
 
     //Width and height of World
-    public static final int WORLD_WIDTH = 1000;
-    public static final int WORLD_HEIGHT = 1000;
+    public static final int WORLD_WIDTH = 1250;
+    public static final int WORLD_HEIGHT = 1250;
 
     //Title of game
     public static final String TITLE = "Session Time";
@@ -34,6 +34,7 @@ public class Constant {
     //Path to textures
     public static final String MENU_BACKGROUND = "data/images/menu_background_2560x1600.png";
     public static final String LOGO = "data/images/logo.png";
+    public static final String ICON_CAT = "data/images/icon_cat.png";
 
     //Path to file of authorization
     public static final String PERSON = "person";

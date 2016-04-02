@@ -76,6 +76,8 @@ public class LoginScreen implements Screen {
         BitmapFont font = Methods.getFont("Bebas_Neue.otf", 76);
 
         //Setting labels
+        Label labelEnterData = new Label("Введите данные",
+                new Label.LabelStyle(font, Color.valueOf("#FFF971")));
         Label labelName = new Label("Имя:", new Label.LabelStyle(font, Color.valueOf("#FFF971")));
         Label labelSpecialty = new Label("Специальность:",
                 new Label.LabelStyle(font, Color.valueOf("#FFF971")));
@@ -94,9 +96,10 @@ public class LoginScreen implements Screen {
         //Setting table for entering and choosing
         table = new Table();
         table.setFillParent(true);
-        table.padBottom(stage.getHeight() / 8);
 
         //Adding elements on table
+        table.add(labelEnterData).colspan(2).center().padBottom(30);
+        table.row();
         table.add(labelName).center();
         table.add(textField).pad(30).width(4 * stage.getWidth() / 9);
         table.row();
@@ -107,7 +110,7 @@ public class LoginScreen implements Screen {
         okButton = Methods.makeButton("OK_button");
         okButton.setSize(okButton.getWidth() / 2, okButton.getHeight() / 2);
         okButton.setPosition(stage.getWidth() - okButton.getWidth() - 30,
-                stage.getHeight() / 3 - okButton.getHeight());
+                stage.getHeight() / 5 - okButton.getHeight());
         okButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
