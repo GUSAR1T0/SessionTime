@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
-import com.teamproject.game.additions.Constant;
+import com.teamproject.game.additions.Constants;
 
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
@@ -23,10 +23,10 @@ public class SettingScreen implements Screen {
 
         this.game = game;
 
-        background = new Texture(Gdx.files.internal(Constant.MENU_BACKGROUND));
+        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
 
-        stage = new Stage(new StretchViewport(Constant.WORLD_WIDTH,
-                Constant.WORLD_HEIGHT * Constant.RATIO));
+        stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
+                Constants.WORLD_HEIGHT * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
     }
 

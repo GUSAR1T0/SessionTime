@@ -7,7 +7,7 @@ import com.badlogic.gdx.Gdx;
  *
  * This structure set all needful constants.
  */
-public class Constant {
+public class Constants {
 
     //Size of Desktop application
     public static final int WIDTH = 1280;

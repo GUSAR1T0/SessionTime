@@ -26,9 +26,7 @@ public class Methods {
                 new TextureRegionDrawable(new TextureRegion(new Texture("data/buttons/" +
                         name + "_pressed.png")));
 
-        ImageButton button = new ImageButton(buttonUp, buttonDown);
-
-        return button;
+        return new ImageButton(buttonUp, buttonDown);
     }
 
     /* This method generates font */
@@ -39,7 +37,7 @@ public class Methods {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
                 new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        parameter.characters = Constant.FONT_CHARS;
+        parameter.characters = Constants.FONT_CHARS;
         parameter.size = size;
 
         BitmapFont font = generator.generateFont(parameter);

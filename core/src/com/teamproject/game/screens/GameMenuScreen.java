@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.teamproject.game.STGame;
-import com.teamproject.game.additions.Constant;
+import com.teamproject.game.additions.Constants;
 
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
@@ -31,14 +31,14 @@ public class GameMenuScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        background = new Texture(Gdx.files.internal(Constant.MENU_BACKGROUND));
+        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
 
         readPersonData();
     }
 
     public void readPersonData() {
 
-        FileHandle file = Gdx.files.local(Constant.PERSON);
+        FileHandle file = Gdx.files.local(Constants.PERSON);
         String tmpString = file.readString();
 
         String name = "";

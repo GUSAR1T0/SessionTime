@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
-import com.teamproject.game.additions.Constant;
+import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Methods;
 
 /**
@@ -48,8 +48,8 @@ public class LoginScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Initialization stage
-        stage = new Stage(new StretchViewport(Constant.WORLD_WIDTH,
-                Constant.WORLD_WIDTH * Constant.RATIO));
+        stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
+                Constants.WORLD_WIDTH * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
 
         //Checking keyboard focus on Actors
@@ -67,7 +67,7 @@ public class LoginScreen implements Screen {
 
     private void writePersonData(String name, int specialty) {
         //Writing entering and choosing data of fields in file
-        FileHandle file = Gdx.files.local(Constant.PERSON);
+        FileHandle file = Gdx.files.local(Constants.PERSON);
         file.writeString(name + "\n" + specialty, false);
     }
 

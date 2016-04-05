@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.teamproject.game.STGame;
-import com.teamproject.game.additions.Constant;
+import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Methods;
 
 /**
@@ -47,23 +47,23 @@ public class MainMenuScreen implements Screen {
 
     private void createMenuScreen() {
         //Setting background texture
-        game.background = new Texture(Gdx.files.internal(Constant.MENU_BACKGROUND));
+        game.background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
 
         //Setting logo texture
-        logo = new Sprite(new Texture(Gdx.files.internal(Constant.LOGO)));
-        logo.setSize(logo.getWidth() * 2 * Constant.SCALING_FACTOR,
-                logo.getHeight() * 2 * Constant.SCALING_FACTOR);
+        logo = new Sprite(new Texture(Gdx.files.internal(Constants.LOGO)));
+        logo.setSize(logo.getWidth() * 2 * Constants.SCALING_FACTOR,
+                logo.getHeight() * 2 * Constants.SCALING_FACTOR);
         logo.setPosition(Gdx.graphics.getWidth() / 2 - logo.getWidth() / 2,
                 Gdx.graphics.getHeight() * 6 / 7 - logo.getHeight() / 2);
 
         //Setting menu buttons
         ImageButton playButton = Methods.makeButton("play_button");
-        playButton.setSize(playButton.getWidth() * 2 * Constant.SCALING_FACTOR,
-                playButton.getHeight() * 2 * Constant.SCALING_FACTOR);
+        playButton.setSize(playButton.getWidth() * 2 * Constants.SCALING_FACTOR,
+                playButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                FileHandle file = Gdx.files.local(Constant.PERSON);
+                FileHandle file = Gdx.files.local(Constants.PERSON);
 
                 //If file of PERSON DATA isn't empty then ... else ...
                 if (file.length() > 0) game.setScreen(new GameMenuScreen(game));
@@ -72,8 +72,8 @@ public class MainMenuScreen implements Screen {
         });
 
         ImageButton settingButton = Methods.makeButton("setting_button");
-        settingButton.setSize(settingButton.getWidth() * 2 * Constant.SCALING_FACTOR,
-                settingButton.getHeight() * 2 * Constant.SCALING_FACTOR);
+        settingButton.setSize(settingButton.getWidth() * 2 * Constants.SCALING_FACTOR,
+                settingButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         settingButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -82,15 +82,15 @@ public class MainMenuScreen implements Screen {
         });
 
         ImageButton menuButton = Methods.makeButton("menu_button");
-        menuButton.setSize(menuButton.getWidth() * 2 * Constant.SCALING_FACTOR,
-                menuButton.getHeight() * 2 * Constant.SCALING_FACTOR);
+        menuButton.setSize(menuButton.getWidth() * 2 * Constants.SCALING_FACTOR,
+                menuButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 /* TODO: 02.04.2016, make useful item of MainMenuScreen
                  * This item of menu deletes local file of personal data
                  */
-                FileHandle file = Gdx.files.local(Constant.PERSON);
+                FileHandle file = Gdx.files.local(Constants.PERSON);
                 file.delete();
             }
         });
@@ -102,9 +102,9 @@ public class MainMenuScreen implements Screen {
         table.padBottom(stage.getHeight() / 20);
 
         //Adding elements on table
-        table.add(playButton).height(playButton.getHeight()).expandX();
-        table.add(settingButton).height(settingButton.getHeight()).expandX();
-        table.add(menuButton).height(menuButton.getHeight()).expandX();
+        table.add(playButton).height(playButton.getHeight()).width(playButton.getWidth()).expandX();
+        table.add(settingButton).height(settingButton.getHeight()).width(settingButton.getWidth()).expandX();
+        table.add(menuButton).height(menuButton.getHeight()).width(menuButton.getWidth()).expandX();
     }
 
     @Override
