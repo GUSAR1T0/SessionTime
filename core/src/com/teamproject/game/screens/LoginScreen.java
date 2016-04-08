@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
-import com.teamproject.game.additions.Methods;
+import com.teamproject.game.additions.Utils;
 
 /**
  * Created by Roman_Mashenkin on 29.03.2016.
@@ -72,8 +73,10 @@ public class LoginScreen implements Screen {
     }
 
     private void createLoginScreen() {
+        Skin skin = game.getSkin();
+
         //Getting font for labels
-        BitmapFont font = Methods.getFont("Bebas_Neue.otf", 76);
+        BitmapFont font = Utils.getFont("Bebas_Neue.otf", 76);
 
         //Setting labels
         Label labelEnterData = new Label("Введите данные",
@@ -83,14 +86,14 @@ public class LoginScreen implements Screen {
                 new Label.LabelStyle(font, Color.valueOf("#FFF971")));
 
         //Setting text field
-        final TextField textField = new TextField("", game.skin, "default");
+        final TextField textField = new TextField("", skin, "default");
         textField.setMaxLength(14);
         textField.setAlignment(Align.center);
         textField.setMessageText("Введите Ваше имя");
-        textField.setColor(game.skin.getColor("white"));
+        textField.setColor(skin.getColor("white"));
 
         //Setting select box
-        final SelectBox<String> selectBox = new SelectBox<String>(game.skin, "default");
+        final SelectBox<String> selectBox = new SelectBox<String>(skin, "default");
         selectBox.setItems(" Техническая", " Гуманитарная");
 
         //Setting table for entering and choosing
@@ -107,7 +110,7 @@ public class LoginScreen implements Screen {
         table.add(selectBox).pad(30).width(4 * stage.getWidth() / 9);
 
         //Setting button (for going to GameMenuScreen class)
-        okButton = Methods.makeButton("OK_button");
+        okButton = Utils.makeButton("OK_button");
         okButton.setSize(okButton.getWidth() / 2, okButton.getHeight() / 2);
         okButton.setPosition(stage.getWidth() - okButton.getWidth() - 30,
                 stage.getHeight() / 5 - okButton.getHeight());
@@ -137,7 +140,7 @@ public class LoginScreen implements Screen {
     public void render(float delta) {
         //Drawing all graphic elements (without actors)
         stage.getBatch().begin();
-        stage.getBatch().draw(game.background, 0, 0);
+        stage.getBatch().draw(game.getBackground(), 0, 0);
         stage.getBatch().end();
 
         //Drawing actors

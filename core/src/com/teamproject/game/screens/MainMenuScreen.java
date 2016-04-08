@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
-import com.teamproject.game.additions.Methods;
+import com.teamproject.game.additions.Utils;
 
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
@@ -47,7 +47,7 @@ public class MainMenuScreen implements Screen {
 
     private void createMenuScreen() {
         //Setting background texture
-        game.background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
+        game.setBackground(new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND)));
 
         //Setting logo texture
         logo = new Sprite(new Texture(Gdx.files.internal(Constants.LOGO)));
@@ -57,7 +57,7 @@ public class MainMenuScreen implements Screen {
                 Gdx.graphics.getHeight() * 6 / 7 - logo.getHeight() / 2);
 
         //Setting menu buttons
-        ImageButton playButton = Methods.makeButton("play_button");
+        ImageButton playButton = Utils.makeButton("play_button");
         playButton.setSize(playButton.getWidth() * 2 * Constants.SCALING_FACTOR,
                 playButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         playButton.addListener(new ChangeListener() {
@@ -71,7 +71,7 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        ImageButton settingButton = Methods.makeButton("setting_button");
+        ImageButton settingButton = Utils.makeButton("setting_button");
         settingButton.setSize(settingButton.getWidth() * 2 * Constants.SCALING_FACTOR,
                 settingButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         settingButton.addListener(new ChangeListener() {
@@ -81,7 +81,7 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        ImageButton menuButton = Methods.makeButton("menu_button");
+        ImageButton menuButton = Utils.makeButton("menu_button");
         menuButton.setSize(menuButton.getWidth() * 2 * Constants.SCALING_FACTOR,
                 menuButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         menuButton.addListener(new ChangeListener() {
@@ -120,7 +120,7 @@ public class MainMenuScreen implements Screen {
 
         //Drawing all graphic elements (without actors)
         stage.getBatch().begin();
-        stage.getBatch().draw(game.background, 0, 0);
+        stage.getBatch().draw(game.getBackground(), 0, 0);
         logo.draw(stage.getBatch());
         stage.getBatch().end();
 

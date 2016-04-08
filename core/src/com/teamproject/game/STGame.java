@@ -16,13 +16,29 @@ import com.teamproject.game.screens.MainMenuScreen;
  */
 public class STGame extends Game {
 
-	public Texture background;
-	public Skin skin;
+	private Texture background;
+	private Skin skin;
+
+	public void setBackground(Texture background) {
+		this.background = background;
+	}
+
+	public Texture getBackground() {
+		return background;
+	}
+
+	public void setSkin(Skin skin) {
+		this.skin = skin;
+	}
+
+	public Skin getSkin() {
+		return skin;
+	}
 
 	@Override
 	public void create() {
-		skin = new Skin(Gdx.files.internal(Constants.SKIN));
-		background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
+		this.setSkin(new Skin(Gdx.files.internal(Constants.SKIN)));
+		this.setBackground(new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND)));
 
 		Gdx.gl.glClearColor(0, 0, 0.5f, 1);
 		setScreen(new MainMenuScreen(this));

@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  *
  * This structure set all needful methods.
  */
-public class Methods {
+public class Utils {
 
     /* This method creates buttons */
     public static ImageButton makeButton(String name) {
