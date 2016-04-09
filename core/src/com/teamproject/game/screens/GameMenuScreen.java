@@ -2,13 +2,11 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.teamproject.game.STGame;
-import com.teamproject.game.additions.Constants;
 
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
@@ -31,40 +29,7 @@ public class GameMenuScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
-
-        readPersonData();
-    }
-
-    public void readPersonData() {
-
-        FileHandle file = Gdx.files.local(Constants.PERSON);
-        String tmpString = file.readString();
-
-        String name = "";
-        int specialty, i = 0;
-
-        while (true) {
-            if (tmpString.charAt(i) != '\n') {
-                name += tmpString.charAt(i++);
-            } else break;
-        }
-
-        i++;
-        String tmp = "";
-
-        while (true) {
-            if (tmpString.length() != i) {
-                tmp += tmpString.charAt(i++);
-            } else break;
-        }
-
-        specialty = Integer.parseInt(tmp);
-
-        //Debugging values of name & specialty
-        //P.S. Truly value of length of "name" equals name.length() - 1
-//        Gdx.app.log("NAME", name);
-//        Gdx.app.log("SPECIALTY", specialty + "");
+//        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
     }
 
     @Override
@@ -78,7 +43,7 @@ public class GameMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         stage.getBatch().begin();
-        stage.getBatch().draw(background, 0, 0);
+//        stage.getBatch().draw(background, 0, 0);
         stage.getBatch().end();
     }
 

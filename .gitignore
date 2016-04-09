@@ -64,4 +64,4 @@ build/
 .DS_Store
 
 ## Generated files for game
-android/assets/person
+android/assets/player

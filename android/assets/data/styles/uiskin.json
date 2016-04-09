@@ -5,26 +5,26 @@
 		white: { a: 1, b: 1, g: 1, r: 1 },
 		red: { a: 1, b: 0, g: 0, r: 1 },
 		black: { a: 1, b: 0, g: 0, r: 0 },
+		color-445565: { a: 1, b: 0.396, g: 0.333, r: 0.267 },
+		color-F2F2F2: { a: 1, b: 0.949, g: 0.949, r: 0.949 }
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 		default: {
-			vScroll: cursor,
-			hScrollKnob: selection,
 			background: background,
-			hScroll: cursor,
-			vScrollKnob: selection
+			hScrollKnob: scroll_knob,
+			vScrollKnob: scroll_knob
 		}
 	},
 	com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 		default: {
 			font: default-font,
-			fontColor: black,
+			fontColor: color-445565,
 			background: background,
 			scrollStyle: default,
 			listStyle: {
 				font: default-font,
-				fontColorSelected: white,
-				fontColorUnselected: black,
+				fontColorSelected: color-F2F2F2,
+				fontColorUnselected: color-445565,
 				selection: selection
 			}
 		}
@@ -34,7 +34,7 @@
 			selection: selection,
 			background: background,
 			font: default-font,
-			fontColor: black,
+			fontColor: color-445565,
 			cursor: cursor
 		}
 	}

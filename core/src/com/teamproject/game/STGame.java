@@ -2,9 +2,10 @@ package com.teamproject.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.teamproject.game.additions.Constants;
+import com.teamproject.game.additions.Utils;
+import com.teamproject.game.screens.LoginScreen;
 import com.teamproject.game.screens.MainMenuScreen;
 
 /**
@@ -16,32 +17,22 @@ import com.teamproject.game.screens.MainMenuScreen;
  */
 public class STGame extends Game {
 
-	private Texture background;
-	private Skin skin;
-
-	public void setBackground(Texture background) {
-		this.background = background;
-	}
-
-	public Texture getBackground() {
-		return background;
-	}
+	private Skin mSkin;
 
 	public void setSkin(Skin skin) {
-		this.skin = skin;
+		mSkin = skin;
 	}
 
 	public Skin getSkin() {
-		return skin;
+		return mSkin;
 	}
 
 	@Override
 	public void create() {
 		this.setSkin(new Skin(Gdx.files.internal(Constants.SKIN)));
-		this.setBackground(new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND)));
 
-		Gdx.gl.glClearColor(0, 0, 0.5f, 1);
-		setScreen(new MainMenuScreen(this));
+		if (Utils.isEmpty()) setScreen(new LoginScreen(this));
+		else setScreen(new MainMenuScreen(this));
 	}
 
 	@Override
@@ -52,8 +43,7 @@ public class STGame extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
-		background.dispose();
-		skin.dispose();
+		mSkin.dispose();
 	}
 
 }

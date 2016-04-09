@@ -32,12 +32,10 @@ public class Constants {
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 
     //Path to textures
-    public static final String MENU_BACKGROUND = "data/images/menu_background_2560x1600.png";
-    public static final String LOGO = "data/images/logo.png";
     public static final String ICON_CAT = "data/images/icon_cat.png";
 
     //Path to file of authorization
-    public static final String PERSON = "person";
+    public static final String PLAYER = "player";
 
     //Path to file of style
     public static final String SKIN = "data/styles/uiskin.json";

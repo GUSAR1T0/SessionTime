@@ -23,7 +23,7 @@ public class SettingScreen implements Screen {
 
         this.game = game;
 
-        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
+//        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
 
         stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
                 Constants.WORLD_HEIGHT * Constants.RATIO));
