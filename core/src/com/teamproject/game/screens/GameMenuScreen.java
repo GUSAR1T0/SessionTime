@@ -2,21 +2,19 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.teamproject.game.STGame;
+import com.teamproject.game.additions.Utils;
 
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
  */
 public class GameMenuScreen implements Screen {
-    // TODO: 02.04.2016, make realization main idea of game or menu of mini-games
+    // TODO: 11.04.2016 to make new realization GameMenuScreen using new design
 
     private OrthographicCamera camera;
     private Stage stage;
-    private Texture background;
     private STGame game;
 
     public GameMenuScreen(STGame game) {
@@ -29,7 +27,6 @@ public class GameMenuScreen implements Screen {
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
-//        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
     }
 
     @Override
@@ -39,12 +36,9 @@ public class GameMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.5f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.getBatch().begin();
-//        stage.getBatch().draw(background, 0, 0);
-        stage.getBatch().end();
+        //Setting background color #445565
+        Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
     }
 
     @Override

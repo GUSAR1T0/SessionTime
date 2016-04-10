@@ -15,9 +15,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 /**
  * Created by Roman_Mashenkin on 01.04.2016.
  *
- * This structure set all needful methods.
+ * This class set all needful functions.
  */
 public class Utils {
+
+    public static class PointerData {
+
+        public TextureRegionDrawable texture1;
+        public TextureRegionDrawable texture2;
+        public Pixmap pixmap1;
+        public Pixmap pixmap2;
+        public ImageTextButton.ImageTextButtonStyle style;
+    }
 
     /* This method sets background color through GL-methods */
     public static void setBackgroundColor(float r, float g, float b, float a) {
@@ -27,9 +36,9 @@ public class Utils {
     }
 
     /* This method sets background color through pixmap */
-    public static Pixmap setPixmapColor(int x, int y, String color) {
+    public static Pixmap setPixmapColor(int width, int height, String color) {
 
-        Pixmap pixmap = new Pixmap(x, y, Pixmap.Format.RGB565);
+        Pixmap pixmap = new Pixmap(width, height, Pixmap.Format.RGB565);
         pixmap.setColor(Color.valueOf(color));
         pixmap.fill();
 
@@ -45,47 +54,63 @@ public class Utils {
     }
 
     /* This method creates buttons through images */
-    public static ImageTextButton.ImageTextButtonStyle makeImageTextButton
-            (String name,
-             String upTextColor, String downTextColor,
+    public static PointerData makeImageTextButton
+            (String buttonColor, String upTextColor, String downTextColor,
              BitmapFont font) {
 
-        ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle(
-            new TextureRegionDrawable(new TextureRegion(new Texture("data/buttons/" + name + ".png"))),
-            new TextureRegionDrawable(new TextureRegion(new Texture("data/buttons/" + name + "_pressed.png"))),
-            new TextureRegionDrawable(new TextureRegion(new Texture("data/buttons/" + name + ".png"))),
-            font);
+        PointerData temp = new PointerData();
 
-        style.fontColor = Color.valueOf(upTextColor);
-        style.downFontColor = Color.valueOf(downTextColor);
+        TextureRegionDrawable texture1 = new TextureRegionDrawable(new TextureRegion(
+                new Texture("data/images/buttons/" + buttonColor + "_button.png")));
+        TextureRegionDrawable texture2 = new TextureRegionDrawable(new TextureRegion(
+                new Texture("data/images/buttons/button_pressed.png")));
 
-        return style;
+        temp.texture1 = texture1;
+        temp.texture2 = texture2;
+
+        temp.style = new ImageTextButton.ImageTextButtonStyle(
+            texture1, texture2, texture1, font);
+
+        temp.style.fontColor = Color.valueOf(upTextColor);
+        temp.style.downFontColor = Color.valueOf(downTextColor);
+
+        return temp;
     }
 
     /* This methods creates buttons through pixmap */
-    public static ImageTextButton.ImageTextButtonStyle makeImageTextButton
-            (int x, int y,
+    public static PointerData makeImageTextButton
+            (int width, int height,
              String upButtonColor, String downButtonColor,
              String upTextColor, String downTextColor,
              BitmapFont font) {
 
-        ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle(
-            new TextureRegionDrawable(new TextureRegion(new Texture(setPixmapColor(x, y, upButtonColor)))),
-            new TextureRegionDrawable(new TextureRegion(new Texture(setPixmapColor(x, y, downButtonColor)))),
-            new TextureRegionDrawable(new TextureRegion(new Texture(setPixmapColor(x, y, upButtonColor)))),
-            font);
+        PointerData temp = new PointerData();
 
-        style.fontColor = Color.valueOf(upTextColor);
-        style.downFontColor = Color.valueOf(downTextColor);
+        temp.pixmap1 = setPixmapColor(width, height, upButtonColor);
+        temp.pixmap2 = setPixmapColor(width, height, downButtonColor);
 
-        return style;
+        TextureRegionDrawable texture1 = new TextureRegionDrawable(new TextureRegion(
+                new Texture(temp.pixmap1)));
+        TextureRegionDrawable texture2 = new TextureRegionDrawable(new TextureRegion(
+                new Texture(temp.pixmap2)));
+
+        temp.texture1 = texture1;
+        temp.texture2 = texture2;
+
+        temp.style = new ImageTextButton.ImageTextButtonStyle(
+            texture1, texture2, texture1, font);
+
+        temp.style.fontColor = Color.valueOf(upTextColor);
+        temp.style.downFontColor = Color.valueOf(downTextColor);
+
+        return temp;
     }
 
     /* This method generates font */
-    public static BitmapFont getFont(String name, int size) {
+    public static BitmapFont getFont(String fontName, int size) {
 
         FreeTypeFontGenerator generator =
-                new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/" + name));
+                new FreeTypeFontGenerator(Gdx.files.internal("data/fonts/" + fontName));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter =
                 new FreeTypeFontGenerator.FreeTypeFontParameter();
 

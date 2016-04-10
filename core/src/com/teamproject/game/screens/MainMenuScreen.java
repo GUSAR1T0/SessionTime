@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -19,6 +20,9 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
+
+import java.util.ArrayList;
 
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
@@ -27,22 +31,19 @@ import com.teamproject.game.additions.Utils;
  */
 public class MainMenuScreen implements Screen {
 
-    private class PlayerData {
-
-        String name;
-        int specialty;
-
-        PlayerData(String name, int specialty) {
-
-            this.name = name;
-            this.specialty = specialty;
-        }
-    }
-
     private STGame game;
     private Stage stage;
+    private BitmapFont fontData;
+    private BitmapFont fontButton;
+    private Pixmap pixmapTableBackground;
+    private TextureRegionDrawable textureTableBackground;
+    private Texture lightgrayStar;
+    private Texture darkgrayStar;
+    private Texture iconPlayer;
     private Table playerTable;
     private Table buttonTable;
+
+    private Utils.PointerData pointerData;
 
     public MainMenuScreen(STGame game) {
 
@@ -60,18 +61,33 @@ public class MainMenuScreen implements Screen {
 
     private void createDataScreen() {
 
-        //Reading data of player from local file
-        MainMenuScreen.PlayerData player = readPlayerData();
+        //Reading data of PLAYER from local file
+        Student player = Student.readStudentData();
 
         //Getting font for labels
-        BitmapFont font = Utils.getFont("Bebas_Neue.otf", 46);
+        fontData = Utils.getFont("Bebas_Neue.otf", 46);
 
-        //Label shows name of player
-        Label labelPlayerName = new Label(player.name,
-                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
+        //Label shows data of PLAYER
+        Label labelName = new Label(player.getName(),
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+        Label labelSpec = new Label(player.getSpecialty(),
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
-        //Adding icon of player
-        Image icon = new Image(new Texture(Gdx.files.internal(Constants.ICON_CAT)));
+        //Adding icons of light-gray and dark-gray stars
+        lightgrayStar = new Texture(Gdx.files.internal(Constants.LIGHTGRAY_STAR));
+        darkgrayStar = new Texture(Gdx.files.internal(Constants.DARKGRAY_STAR));
+
+        ArrayList<Image> iconStar = new ArrayList<Image>();
+        for (int i = 0; i < player.getSemester(); i++) {
+            iconStar.add(new Image(lightgrayStar));
+        }
+        for (int i = 0; i < Constants.COUNT_STARS_B - player.getSemester(); i++) {
+            iconStar.add(new Image(darkgrayStar));
+        }
+
+        //Adding icon of PLAYER
+        iconPlayer = new Texture(Gdx.files.internal(Constants.ICON_CAT));
+        Image imageIconPlayer = new Image(iconPlayer);
 
         //Setting table for data of PLAYER
         playerTable = new Table();
@@ -79,33 +95,49 @@ public class MainMenuScreen implements Screen {
         playerTable.setWidth(stage.getWidth() * 3/8f);
         playerTable.setHeight(stage.getHeight());
 
-        playerTable.setBackground(new TextureRegionDrawable(new TextureRegion(
-                new Texture(Utils.setPixmapColor(1, 1, "#CC4B4B")))));
+        pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
+        textureTableBackground = new TextureRegionDrawable(new TextureRegion(
+                new Texture(pixmapTableBackground)));
 
-        playerTable.add(icon).width(3/16f * stage.getWidth()).
-                height(3/16f * stage.getWidth());
+        playerTable.setBackground(textureTableBackground);
+
+        for (int i = 0; i < Constants.COUNT_STARS_B; i++) {
+            playerTable.add(iconStar.get(i)).width(6 / 150f * stage.getWidth()).
+                    height(6 / 150f * stage.getWidth()).padBottom(stage.getHeight() / 15f).
+                    padLeft(2).padRight(2);
+        }
         playerTable.row();
-        playerTable.add(labelPlayerName).padTop(stage.getHeight() / 10f);
+        playerTable.add(imageIconPlayer).width(3/16f * stage.getWidth()).
+                height(3/16f * stage.getWidth()).colspan(Constants.COUNT_STARS_B);
+        playerTable.row();
+        playerTable.add(labelName).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
+        playerTable.row();
+        playerTable.add(labelSpec).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
     }
 
     private void createButtonScreen() {
 
         //Getting font for text on buttons
-        BitmapFont font = Utils.getFont("Bebas_Neue.otf", 58);
+        fontButton = Utils.getFont("Bebas_Neue.otf", 58);
 
         //Creating style for ImageTextButton
-        ImageTextButton.ImageTextButtonStyle style = new ImageTextButton.ImageTextButtonStyle(
-                Utils.makeImageTextButton((int) (stage.getWidth() / 2),
-                        (int) (stage.getHeight() * 7 / 48),
-                        "#F2F2F2", "#666666",
-                        "#445565", "#F2F2F2",
-                        font)
-        );
+        pointerData = Utils.makeImageTextButton((int) (stage.getWidth() / 2),
+                (int) (stage.getHeight() * 7 / 40),
+                "#F2F2F2", "#666666",
+                "#445565", "#F2F2F2",
+                fontButton);
 
         //Creating ImageTextButtons
+        ImageTextButton.ImageTextButtonStyle style = pointerData.style;
+
         ImageTextButton playButton = new ImageTextButton("Играть", style);
+        // TODO: 11.04.2016 to add listener for playButton
 
         ImageTextButton statisticsButton = new ImageTextButton("Статистика", style);
+        // TODO: 11.04.2016 to add listener for statisticsButton
+
+        ImageTextButton helpButton = new ImageTextButton("Помощь", style);
+        // TODO: 11.04.2016 to add listener for helpButton
 
         ImageTextButton settingsButton = new ImageTextButton("Настройки", style);
         settingsButton.addListener(new ChangeListener() {
@@ -113,6 +145,7 @@ public class MainMenuScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 FileHandle file = Gdx.files.local(Constants.PLAYER);
                 file.delete();
+                dispose();
                 game.setScreen(new LoginScreen(game));
             }
         });
@@ -128,41 +161,9 @@ public class MainMenuScreen implements Screen {
         buttonTable.row();
         buttonTable.add(statisticsButton).expand();
         buttonTable.row();
+        buttonTable.add(helpButton).expand();
+        buttonTable.row();
         buttonTable.add(settingsButton).expand();
-    }
-
-    public PlayerData readPlayerData() {
-
-        //Opening file to read player data
-        FileHandle file = Gdx.files.local(Constants.PLAYER);
-        String tmpString = file.readString();
-
-        String name = "";
-        int specialty, i = 0;
-
-        while (true) {
-            if (tmpString.charAt(i) != '\n') {
-                name += tmpString.charAt(i++);
-            } else break;
-        }
-
-        i++;
-        String tmp = "";
-
-        while (true) {
-            if (tmpString.length() != i) {
-                tmp += tmpString.charAt(i++);
-            } else break;
-        }
-
-        specialty = Integer.parseInt(tmp);
-
-        //Debugging values of name & specialty
-        //P.S. Truly value of length of "name" equals name.length() - 1
-//        Gdx.app.log("NAME", name);
-//        Gdx.app.log("SPECIALTY", specialty + "");
-
-        return new PlayerData(name, specialty);
     }
 
     @Override
@@ -209,5 +210,16 @@ public class MainMenuScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        fontData.dispose();
+        fontButton.dispose();
+        pixmapTableBackground.dispose();
+        textureTableBackground.getRegion().getTexture().dispose();
+        pointerData.texture1.getRegion().getTexture().dispose();
+        pointerData.texture2.getRegion().getTexture().dispose();
+        pointerData.pixmap1.dispose();
+        pointerData.pixmap2.dispose();
+        lightgrayStar.dispose();
+        darkgrayStar.dispose();
+        iconPlayer.dispose();
     }
 }

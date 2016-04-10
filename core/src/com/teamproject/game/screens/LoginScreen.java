@@ -2,7 +2,6 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -21,18 +20,22 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
 
 /**
  * Created by Roman_Mashenkin on 29.03.2016.
  *
- * This class is authorization view.
+ * This class is login view.
  */
 public class LoginScreen implements Screen {
 
     private STGame game;
     private Stage stage;
+    private BitmapFont font;
     private Table table;
     private ImageTextButton okButton;
+
+    private Utils.PointerData pointerData;
 
     public LoginScreen(STGame game) {
 
@@ -56,19 +59,12 @@ public class LoginScreen implements Screen {
         createLoginScreen();
     }
 
-    private void writePersonData(String name, int specialty) {
-
-        //Writing entering and choosing data of fields in file
-        FileHandle file = Gdx.files.local(Constants.PLAYER);
-        file.writeString(name + "\n" + specialty, false);
-    }
-
     private void createLoginScreen() {
 
         Skin skin = game.getSkin();
 
         //Getting font for labels
-        BitmapFont font = Utils.getFont("Bebas_Neue.otf", 58);
+        font = Utils.getFont("Bebas_Neue.otf", 58);
 
         //Setting labels
         Label labelEnterData = new Label("Пожалуйста, для начала игры заполните все поля",
@@ -85,7 +81,13 @@ public class LoginScreen implements Screen {
 
         //Setting select box
         final SelectBox<String> selectBox = new SelectBox<String>(skin, "default");
-        selectBox.setItems(" Техническая", " Гуманитарная", " Медицинская", " Педагогическая", " Агропромышленная");
+
+        String[] specList = new String[Student.getSpecList().size()];
+
+        for (int i = 0; i < Student.getSpecList().size(); i++)
+            specList[i] = " " + Student.getSpecList().get(i);
+
+        selectBox.setItems(specList);
 
         //Setting table for entering and choosing
         table = new Table();
@@ -101,10 +103,12 @@ public class LoginScreen implements Screen {
         table.add(selectBox).pad(30).width(4 * stage.getWidth() / 9);
 
         //Setting button (for going to MainMenuScreen class)
-        ImageTextButton.ImageTextButtonStyle style = Utils.makeImageTextButton(
-                "OK_button",
-                "#F2F2F2", "#F2F2F2",
+        pointerData = Utils.makeImageTextButton(
+                "green", "#F2F2F2", "#F2F2F2",
                 font);
+
+        ImageTextButton.ImageTextButtonStyle style = pointerData.style;
+
         okButton = new ImageTextButton("OK", style);
         okButton.setPosition(stage.getWidth() - okButton.getWidth() - 30,
                 stage.getHeight() / 5 - okButton.getHeight() - 10);
@@ -113,7 +117,8 @@ public class LoginScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 //If text field isn't empty then ...
                 if (textField.getText().length() > 0) {
-                    writePersonData(textField.getText(), selectBox.getSelectedIndex());
+                    Student.writeStudentData(textField.getText(), selectBox.getSelectedIndex(), 0);
+                    dispose();
                     game.setScreen(new MainMenuScreen(game));
                 }
             }
@@ -166,5 +171,8 @@ public class LoginScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        font.dispose();
+        pointerData.texture1.getRegion().getTexture().dispose();
+        pointerData.texture2.getRegion().getTexture().dispose();
     }
 }

@@ -12,8 +12,7 @@ import com.teamproject.game.screens.MainMenuScreen;
  * Created by Roman_Mashenkin on 26.03.2016.
  *
  * Main class of game "Session Time".
- * This class initializes skin parameters of game (needed for authorization view) and
- * background texture which uses in some screens.
+ * This class initializes skin parameters of game, sets screens (LoginScreen or MainMenuScreen).
  */
 public class STGame extends Game {
 
@@ -29,7 +28,7 @@ public class STGame extends Game {
 
 	@Override
 	public void create() {
-		this.setSkin(new Skin(Gdx.files.internal(Constants.SKIN)));
+		setSkin(new Skin(Gdx.files.internal(Constants.SKIN)));
 
 		if (Utils.isEmpty()) setScreen(new LoginScreen(this));
 		else setScreen(new MainMenuScreen(this));
@@ -45,5 +44,4 @@ public class STGame extends Game {
 		super.dispose();
 		mSkin.dispose();
 	}
-
 }
