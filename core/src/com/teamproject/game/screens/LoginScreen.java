@@ -103,7 +103,7 @@ public class LoginScreen implements Screen {
         table.add(selectBox).pad(30).width(4 * stage.getWidth() / 9);
 
         //Setting button (for going to MainMenuScreen class)
-        pointerData = Utils.makeImageTextButton(
+        pointerData = Utils.getImageTextButton(
                 "green", "#F2F2F2", "#F2F2F2",
                 font);
 
@@ -170,6 +170,7 @@ public class LoginScreen implements Screen {
 
     @Override
     public void dispose() {
+
         stage.dispose();
         font.dispose();
         pointerData.texture1.getRegion().getTexture().dispose();

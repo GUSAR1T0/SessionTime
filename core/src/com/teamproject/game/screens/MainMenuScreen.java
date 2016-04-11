@@ -6,8 +6,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -44,6 +46,8 @@ public class MainMenuScreen implements Screen {
     private Table buttonTable;
 
     private Utils.PointerData pointerData;
+
+    private int stateTime = 0;
 
     public MainMenuScreen(STGame game) {
 
@@ -121,7 +125,7 @@ public class MainMenuScreen implements Screen {
         fontButton = Utils.getFont("Bebas_Neue.otf", 58);
 
         //Creating style for ImageTextButton
-        pointerData = Utils.makeImageTextButton((int) (stage.getWidth() / 2),
+        pointerData = Utils.getImageTextButton((int) (stage.getWidth() / 2),
                 (int) (stage.getHeight() * 7 / 40),
                 "#F2F2F2", "#666666",
                 "#445565", "#F2F2F2",
@@ -209,6 +213,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+
         stage.dispose();
         fontData.dispose();
         fontButton.dispose();

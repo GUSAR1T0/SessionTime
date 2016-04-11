@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -54,7 +55,7 @@ public class Utils {
     }
 
     /* This method creates buttons through images */
-    public static PointerData makeImageTextButton
+    public static PointerData getImageTextButton
             (String buttonColor, String upTextColor, String downTextColor,
              BitmapFont font) {
 
@@ -78,7 +79,7 @@ public class Utils {
     }
 
     /* This methods creates buttons through pixmap */
-    public static PointerData makeImageTextButton
+    public static PointerData getImageTextButton
             (int width, int height,
              String upButtonColor, String downButtonColor,
              String upTextColor, String downTextColor,
