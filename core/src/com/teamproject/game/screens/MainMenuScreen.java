@@ -6,10 +6,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -29,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
  *
- * This class is view of game menu.
+ * This class is main menu view of game.
  */
 public class MainMenuScreen implements Screen {
 
@@ -47,9 +45,7 @@ public class MainMenuScreen implements Screen {
 
     private Utils.PointerData pointerData;
 
-    private int stateTime = 0;
-
-    public MainMenuScreen(STGame game) {
+    public MainMenuScreen(final STGame game) {
 
         this.game = game;
 
@@ -69,7 +65,7 @@ public class MainMenuScreen implements Screen {
         Student player = Student.readStudentData();
 
         //Getting font for labels
-        fontData = Utils.getFont("Bebas_Neue.otf", 46);
+        fontData = Utils.getFont("BebasNeue.otf", 46);
 
         //Label shows data of PLAYER
         Label labelName = new Label(player.getName(),
@@ -78,8 +74,8 @@ public class MainMenuScreen implements Screen {
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
         //Adding icons of light-gray and dark-gray stars
-        lightgrayStar = new Texture(Gdx.files.internal(Constants.LIGHTGRAY_STAR));
-        darkgrayStar = new Texture(Gdx.files.internal(Constants.DARKGRAY_STAR));
+        lightgrayStar = game.getManager().get(Constants.LIGHTGRAY_STAR, Texture.class);
+        darkgrayStar = game.getManager().get(Constants.DARKGRAY_STAR, Texture.class);
 
         ArrayList<Image> iconStar = new ArrayList<Image>();
         for (int i = 0; i < player.getSemester(); i++) {
@@ -90,7 +86,7 @@ public class MainMenuScreen implements Screen {
         }
 
         //Adding icon of PLAYER
-        iconPlayer = new Texture(Gdx.files.internal(Constants.ICON_CAT));
+        iconPlayer = game.getManager().get(Constants.ICON_CAT, Texture.class);
         Image imageIconPlayer = new Image(iconPlayer);
 
         //Setting table for data of PLAYER
@@ -122,7 +118,7 @@ public class MainMenuScreen implements Screen {
     private void createButtonScreen() {
 
         //Getting font for text on buttons
-        fontButton = Utils.getFont("Bebas_Neue.otf", 58);
+        fontButton = Utils.getFont("BebasNeue.otf", 58);
 
         //Creating style for ImageTextButton
         pointerData = Utils.getImageTextButton((int) (stage.getWidth() / 2),

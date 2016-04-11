@@ -13,11 +13,11 @@ import com.teamproject.game.additions.Utils;
 public class GameMenuScreen implements Screen {
     // TODO: 11.04.2016 to make new realization GameMenuScreen using new design
 
-    private OrthographicCamera camera;
-    private Stage stage;
     private STGame game;
+    private Stage stage;
+    private OrthographicCamera camera;
 
-    public GameMenuScreen(STGame game) {
+    public GameMenuScreen(final STGame game) {
 
         this.game = game;
 

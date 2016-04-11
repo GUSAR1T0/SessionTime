@@ -25,7 +25,7 @@ import com.teamproject.game.models.Student;
 /**
  * Created by Roman_Mashenkin on 29.03.2016.
  *
- * This class is login view.
+ * This class shows general fields for filling information about player.
  */
 public class LoginScreen implements Screen {
 
@@ -37,7 +37,7 @@ public class LoginScreen implements Screen {
 
     private Utils.PointerData pointerData;
 
-    public LoginScreen(STGame game) {
+    public LoginScreen(final STGame game) {
 
         this.game = game;
 
@@ -64,7 +64,7 @@ public class LoginScreen implements Screen {
         Skin skin = game.getSkin();
 
         //Getting font for labels
-        font = Utils.getFont("Bebas_Neue.otf", 58);
+        font = Utils.getFont("BebasNeue.otf", 58);
 
         //Setting labels
         Label labelEnterData = new Label("Пожалуйста, для начала игры заполните все поля",
@@ -97,10 +97,10 @@ public class LoginScreen implements Screen {
         table.add(labelEnterData).colspan(2).center().padBottom(20);
         table.row();
         table.add(labelName).center();
-        table.add(textField).pad(30).width(4 * stage.getWidth() / 9);
+        table.add(textField).pad(30).width(4 * stage.getWidth() / 9f);
         table.row();
         table.add(labelSpecialty).center();
-        table.add(selectBox).pad(30).width(4 * stage.getWidth() / 9);
+        table.add(selectBox).pad(30).width(4 * stage.getWidth() / 9f);
 
         //Setting button (for going to MainMenuScreen class)
         pointerData = Utils.getImageTextButton(
@@ -111,7 +111,7 @@ public class LoginScreen implements Screen {
 
         okButton = new ImageTextButton("OK", style);
         okButton.setPosition(stage.getWidth() - okButton.getWidth() - 30,
-                stage.getHeight() / 5 - okButton.getHeight() - 10);
+                stage.getHeight() / 5f - okButton.getHeight() - 10);
         okButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -127,6 +127,7 @@ public class LoginScreen implements Screen {
 
     @Override
     public void show() {
+
         //Adding Actors on stage
         stage.addActor(table);
         stage.addActor(okButton);

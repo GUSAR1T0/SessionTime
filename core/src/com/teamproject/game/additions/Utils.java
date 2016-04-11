@@ -13,6 +13,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import java.util.ArrayList;
+
 /**
  * Created by Roman_Mashenkin on 01.04.2016.
  *
@@ -123,5 +125,18 @@ public class Utils {
         generator.dispose();
 
         return font;
+    }
+
+    /* This method creates animation from textures ArrayList */
+    public static Animation getAnimation(ArrayList<Texture> textures, int count, int velocity) {
+
+        TextureRegion textureFrames[] = new TextureRegion[count];
+
+        int index = 0;
+        for (int i = 0; i < count; i++) {
+                textureFrames[index++] = new TextureRegion(textures.get(i));
+        }
+
+        return new Animation(1f / velocity, textureFrames);
     }
 }

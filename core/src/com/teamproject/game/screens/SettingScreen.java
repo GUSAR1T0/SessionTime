@@ -14,10 +14,10 @@ import com.teamproject.game.additions.Utils;
 public class SettingScreen implements Screen {
     // TODO: 11.04.2016 to make screen of settings with different parameters using new design
 
-    private Stage stage;
     private STGame game;
+    private Stage stage;
 
-    public SettingScreen(STGame game) {
+    public SettingScreen(final STGame game) {
 
         this.game = game;
 

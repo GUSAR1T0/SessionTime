@@ -29,6 +29,9 @@ public class Constants {
     //The count of stars in Main Menu
     public static final int COUNT_STARS_B = 8;
 
+    //The count of loading textures
+    public static final int COUNT_LOADING_TEXTURES = 16;
+
     //Setting of sequence of English and Russian letters, numerals and special chars
     public static final String FONT_CHARS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
             "abcdefghijklmnopqrstuvwxyz" + "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
@@ -36,6 +39,7 @@ public class Constants {
 
     //Path to textures
     public static final String ICON_CAT = "data/images/icon_cat.png";
+    public static final String ICON_LOGO = "data/images/icon_logo.png";
     public static final String LIGHTGRAY_STAR = "data/images/stars/lightgray_star.png";
     public static final String DARKGRAY_STAR = "data/images/stars/darkgray_star.png";
 
