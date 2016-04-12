@@ -75,7 +75,9 @@ public class MainMenuScreen implements Screen {
 
         //Adding icons of light-gray and dark-gray stars
         lightgrayStar = game.getManager().get(Constants.LIGHTGRAY_STAR, Texture.class);
+//        lightgrayStar = new Texture(Gdx.files.internal(Constants.LIGHTGRAY_STAR));
         darkgrayStar = game.getManager().get(Constants.DARKGRAY_STAR, Texture.class);
+//        darkgrayStar = new Texture(Gdx.files.internal(Constants.DARKGRAY_STAR));
 
         ArrayList<Image> iconStar = new ArrayList<Image>();
         for (int i = 0; i < player.getSemester(); i++) {
@@ -87,6 +89,7 @@ public class MainMenuScreen implements Screen {
 
         //Adding icon of PLAYER
         iconPlayer = game.getManager().get(Constants.ICON_CAT, Texture.class);
+//        iconPlayer = new Texture(Gdx.files.internal(Constants.ICON_CAT));
         Image imageIconPlayer = new Image(iconPlayer);
 
         //Setting table for data of PLAYER
@@ -219,8 +222,8 @@ public class MainMenuScreen implements Screen {
         pointerData.texture2.getRegion().getTexture().dispose();
         pointerData.pixmap1.dispose();
         pointerData.pixmap2.dispose();
-        lightgrayStar.dispose();
-        darkgrayStar.dispose();
-        iconPlayer.dispose();
+//        lightgrayStar.dispose();
+//        darkgrayStar.dispose();
+//        iconPlayer.dispose();
     }
 }

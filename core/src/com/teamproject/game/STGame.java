@@ -1,6 +1,7 @@
 package com.teamproject.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -48,6 +49,7 @@ public class STGame extends Game {
 	public void create() {
 
 		setAssetManager(new AssetManager());
+//		setSkin(new Skin(Gdx.files.internal(Constants.SKIN)));
 
 		setScreen(new LoadingScreen(this));
 	}
@@ -60,6 +62,7 @@ public class STGame extends Game {
 	@Override
 	public void dispose() {
 		super.dispose();
+		mSkin.dispose();
 		mAssetManager.dispose();
 	}
 }
