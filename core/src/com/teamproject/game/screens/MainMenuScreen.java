@@ -37,9 +37,6 @@ public class MainMenuScreen implements Screen {
     private BitmapFont fontButton;
     private Pixmap pixmapTableBackground;
     private TextureRegionDrawable textureTableBackground;
-    private Texture lightgrayStar;
-    private Texture darkgrayStar;
-    private Texture iconPlayer;
     private Table playerTable;
     private Table buttonTable;
 
@@ -74,23 +71,16 @@ public class MainMenuScreen implements Screen {
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
         //Adding icons of light-gray and dark-gray stars
-        lightgrayStar = game.getManager().get(Constants.LIGHTGRAY_STAR, Texture.class);
-//        lightgrayStar = new Texture(Gdx.files.internal(Constants.LIGHTGRAY_STAR));
-        darkgrayStar = game.getManager().get(Constants.DARKGRAY_STAR, Texture.class);
-//        darkgrayStar = new Texture(Gdx.files.internal(Constants.DARKGRAY_STAR));
-
         ArrayList<Image> iconStar = new ArrayList<Image>();
         for (int i = 0; i < player.getSemester(); i++) {
-            iconStar.add(new Image(lightgrayStar));
+            iconStar.add(new Image(game.getManager().get(Constants.LIGHTGRAY_STAR, Texture.class)));
         }
         for (int i = 0; i < Constants.COUNT_STARS_B - player.getSemester(); i++) {
-            iconStar.add(new Image(darkgrayStar));
+            iconStar.add(new Image(game.getManager().get(Constants.DARKGRAY_STAR, Texture.class)));
         }
 
         //Adding icon of PLAYER
-        iconPlayer = game.getManager().get(Constants.ICON_CAT, Texture.class);
-//        iconPlayer = new Texture(Gdx.files.internal(Constants.ICON_CAT));
-        Image imageIconPlayer = new Image(iconPlayer);
+        Image imageIconPlayer = new Image(game.getManager().get(Constants.ICON_CAT, Texture.class));
 
         //Setting table for data of PLAYER
         playerTable = new Table();
@@ -222,8 +212,5 @@ public class MainMenuScreen implements Screen {
         pointerData.texture2.getRegion().getTexture().dispose();
         pointerData.pixmap1.dispose();
         pointerData.pixmap2.dispose();
-//        lightgrayStar.dispose();
-//        darkgrayStar.dispose();
-//        iconPlayer.dispose();
     }
 }

@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
@@ -26,7 +25,6 @@ public class LoadingScreen implements Screen{
     private Stage stage;
     private Texture textureLogo;
     private Image imageLogo;
-    private Image imageLoading;
     private Animation animationLoading;
 
     private ArrayList<Texture> textureLoading;
@@ -69,13 +67,19 @@ public class LoadingScreen implements Screen{
         animationLoading = Utils.getAnimation(textureLoading, Constants.COUNT_LOADING_TEXTURES, 10);
     }
 
-    public void updateFrame() {
+    public void runLoading(float delta) {
+
+        //Incrementing stateTime
+        stateTime += delta;
 
         //Updating loading textures on stage
-        imageLoading = new Image(animationLoading.getKeyFrame(stateTime, true));
+        Image imageLoading = new Image(animationLoading.getKeyFrame(stateTime, true));
         imageLoading.setSize(stage.getWidth() / 3f, stage.getWidth() / 3f);
         imageLoading.setPosition(stage.getWidth() / 2 - imageLoading.getWidth() / 2,
                 stage.getHeight() / 2 - imageLoading.getHeight() / 2);
+
+        //Adding Actor on stage
+        stage.addActor(imageLoading);
     }
 
     @Override
@@ -98,22 +102,20 @@ public class LoadingScreen implements Screen{
         stage.act(delta);
 
         //Adding and updating loading textures on stage
-        if (stateTime < 4) {
-            stateTime += delta;
-
-            updateFrame();
-            stage.addActor(imageLoading);
-        } else
+        if (stateTime < 4) runLoading(delta);
+        else
             if (game.getManager().update()) {
-                Timer.instance().clear();
 
                 dispose();
 
                 game.setSkin(game.getManager().get(Constants.SKIN, Skin.class));
+                game.getManager().finishLoading();
 
                 if (Utils.isEmpty()) game.setScreen(new LoginScreen(game));
                 else game.setScreen(new MainMenuScreen(game));
             }
+            else
+                runLoading(delta);
     }
 
     @Override
@@ -138,6 +140,7 @@ public class LoadingScreen implements Screen{
 
     @Override
     public void dispose() {
+
         stage.dispose();
         textureLogo.dispose();
 
