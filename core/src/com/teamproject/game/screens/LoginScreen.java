@@ -49,8 +49,10 @@ public class LoginScreen implements Screen {
         //Checking keyboard focus on Actors
         stage.getRoot().addCaptureListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                if (!(event.getTarget() instanceof TextField))
+                if (!(event.getTarget() instanceof TextField)) {
                     stage.setKeyboardFocus(null);
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                }
                 return false;
             }
         });
