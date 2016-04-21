@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class Utils {
         public Pixmap pixmap1;
         public Pixmap pixmap2;
         public ImageTextButton.ImageTextButtonStyle style;
+        public Slider.SliderStyle styleSlide;
     }
 
     /* This method sets background color through GL-methods */

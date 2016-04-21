@@ -139,7 +139,7 @@ public class MainMenuScreen implements Screen {
                 FileHandle file = Gdx.files.local(Constants.PLAYER);
                 file.delete();
                 dispose();
-                game.setScreen(new LoginScreen(game));
+                game.setScreen(new SettingScreen(game));
             }
         });
 
