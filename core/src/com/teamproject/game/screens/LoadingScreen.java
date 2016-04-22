@@ -102,7 +102,9 @@ public class LoadingScreen implements Screen{
         stage.act(delta);
 
         //Adding and updating loading textures on stage
-        if (stateTime < 4) runLoading(delta);
+
+        //stateTime < 4! ахтунг!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (stateTime == 0) runLoading(delta);
         else
             if (game.getManager().update()) {
 

@@ -29,6 +29,7 @@ public class ConfirmDeletion implements Screen {
     private BitmapFont font;
     private Table table;
     private Utils.PointerData pointerData;
+    private ImageTextButton delButton, noDelButton;
 
     public ConfirmDeletion(final STGame game){
         this.game = game;
@@ -53,8 +54,7 @@ public class ConfirmDeletion implements Screen {
 
 
     private void createScreen() {
-
-
+        
         //Getting font for labels
         font = Utils.getFont("BebasNeue.otf", 58);
 
@@ -68,10 +68,14 @@ public class ConfirmDeletion implements Screen {
                 "#f2f2f2", "#F2F2F2",
                 font);
 
-        ImageTextButton.ImageTextButtonStyle styleDel = pointerData.style;
 
-        ImageTextButton DelPlayer = new ImageTextButton("Удалить!", styleDel);
-        DelPlayer.addListener(new ChangeListener() {
+//=============================================
+        pointerData = Utils.getImageTextButton(
+                "red", "#F2F2F2", "#F2F2F2",
+                font);
+        ImageTextButton.ImageTextButtonStyle style = pointerData.style;
+        delButton = new ImageTextButton("Да", style);
+        delButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 FileHandle file = Gdx.files.local(Constants.PLAYER);
@@ -80,15 +84,18 @@ public class ConfirmDeletion implements Screen {
                 game.setScreen(new LoginScreen(game));
             }
         });
-        ImageTextButton NotDelPlayer = new ImageTextButton("Не удалять..", styleDel);
-        NotDelPlayer.addListener(new ChangeListener() {
+        pointerData = Utils.getImageTextButton(
+                "green", "#F2F2F2", "#F2F2F2",
+                font);
+        ImageTextButton.ImageTextButtonStyle style1 = pointerData.style;
+        noDelButton = new ImageTextButton("Нет", style1);
+        noDelButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
                 game.setScreen(new SettingScreen(game));
             }
         });
-
 
         //Setting table for entering and choosing
         table = new Table();
@@ -97,8 +104,8 @@ public class ConfirmDeletion implements Screen {
         //Adding elements on table
         table.add(labelData).colspan(2).center().padBottom(20);
         table.row();
-        table.add(DelPlayer);
-        table.add(NotDelPlayer);
+        table.add(delButton).pad(20,0,0,20);
+        table.add(noDelButton).pad(20,20,0,0);
     }
 
 

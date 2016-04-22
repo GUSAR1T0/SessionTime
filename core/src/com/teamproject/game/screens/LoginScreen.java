@@ -69,7 +69,9 @@ public class LoginScreen implements Screen {
         font = Utils.getFont("BebasNeue.otf", 58);
 
         //Setting labels
-        Label labelEnterData = new Label("Пожалуйста, для начала игры заполните все поля",
+        Label greeting = new Label("Привет студент!",
+                new Label.LabelStyle(font,  Color.valueOf("#F2F2F2")));
+        Label labelEnterData = new Label("Создай новый профиль для входа в игру",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelName = new Label("Имя:", new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelSpecialty = new Label("Специальность:",
@@ -96,7 +98,11 @@ public class LoginScreen implements Screen {
         table.setFillParent(true);
 
         //Adding elements on table
-        table.add(labelEnterData).colspan(2).center().padBottom(20);
+        table.setPosition(stage.getWidth()/4 - greeting.getWidth(),
+                stage.getHeight()/5 - greeting.getHeight());
+        table.add(greeting).colspan(2).center();
+        table.row();
+        table.add(labelEnterData).colspan(2).center().padBottom(20).pad(90,0,0,0);
         table.row();
         table.add(labelName).center();
         table.add(textField).pad(30).width(4 * stage.getWidth() / 9f);

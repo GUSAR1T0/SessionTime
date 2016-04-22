@@ -2,6 +2,7 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -39,6 +40,7 @@ public class MainMenuScreen implements Screen {
     private TextureRegionDrawable textureTableBackground;
     private Table playerTable;
     private Table buttonTable;
+    Music gameMusic;
 
     private Utils.PointerData pointerData;
 
@@ -106,6 +108,15 @@ public class MainMenuScreen implements Screen {
         playerTable.add(labelName).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
         playerTable.row();
         playerTable.add(labelSpec).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
+
+        //music
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/music/nuan.mp3"));
+        gameMusic.setLooping(true);
+        gameMusic.play();
+        gameMusic.setVolume(0.2f);
+        if (gameMusic.isPlaying()== false) {
+            gameMusic.play();
+        }
     }
 
     private void createButtonScreen() {
@@ -136,8 +147,6 @@ public class MainMenuScreen implements Screen {
         settingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                FileHandle file = Gdx.files.local(Constants.PLAYER);
-                file.delete();
                 dispose();
                 game.setScreen(new SettingScreen(game));
             }

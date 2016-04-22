@@ -3,7 +3,6 @@ package com.teamproject.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 
 
 /**
@@ -27,9 +26,7 @@ public class SettingScreen implements Screen {
     private STGame game;
     private Stage stage;
     private BitmapFont font;
-    private Table table, table1;
-    private Texture IconSlider;
-    private Image Slider;
+    private Table table;
     private ImageTextButton okButton;
 
     private Utils.PointerData pointerData;
@@ -44,60 +41,55 @@ public class SettingScreen implements Screen {
         createSettingScreen();
     }
 
-
-
-//    static public class SliderStyle {
-//        NinePatch sliderFon; //Фон ползунка. Растягивается только по горизонтали.
-//        TextureRegion knob; // Изображение части, которую мы передвигаем.
-//    }
-    private void createSettingScreen(){
+    private void createSettingScreen() {
         font = Utils.getFont("BebasNeue.otf", 58);
 
         //Setting labels
         Label labelEnterData = new Label("Настройки игры",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
-        Label labelNewGame = new Label("Удалить игрока, начать новую игру!  -  ", new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
-
-
-// ===============================================
-// что то непонятное со слайдером
-//        IconSlider = new Texture(Gdx.files.internal(Constants.ICON_SLIDER));
-//        Slider = new Image(IconSlider);
-//        final Slider slider = new Slider(1,100,1,true, pointerData.styleSlide);
-//        slider.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//            }
-//        });
-//=================================================
+        Label labelNewGame = new Label("Удалить игрока, начать новую игру! - ",
+                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
+        Label labelVolum = new Label("Громкость музыки:",
+                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
 
         pointerData = Utils.getImageTextButton((int) (stage.getWidth() / 6),
                 (int) (stage.getHeight() * 7 / 55),
                 "#445565", "#445565",
                 "#f2f2f2", "#F2F2F2",
                 font);
-
         ImageTextButton.ImageTextButtonStyle styleDel = pointerData.style;
-
         ImageTextButton DelPlayer = new ImageTextButton("ДА!", styleDel);
-
         DelPlayer.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
                 game.setScreen(new ConfirmDeletion(game));
+
             }
         });
 
+        //Slider
+        Slider slider = new Slider(1, 100, 1, false, game.getSkin(), "default");
+        slider.setAnimateDuration(0.3f);
+        slider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+            }
+        });
 
-    table = new Table();
+        table = new Table();
         table.setFillParent(true);
-
+        table.setPosition(stage.getWidth() / 3f - labelEnterData.getWidth(),
+                stage.getHeight() / 5f - labelEnterData.getHeight());
         //adding element on table
-        table.add(labelEnterData).colspan(2).center().padBottom(10);
+        table.add(labelEnterData).center();
         table.row();
-        table.add(labelNewGame).center();
-        table.add(DelPlayer);
+        table.add(labelNewGame).colspan(2).pad(60,0,0,0);
+        table.add(DelPlayer).pad(60,0,0,0);
+        table.row();
+        table.add(labelVolum).pad(40,0,20,0);
+        table.row();
+        table.add(slider).width(stage.getWidth()/2).pad(20,0,20,0);
 
 
         //Setting button (for going to MainMenuScreen class)
@@ -115,8 +107,8 @@ public class SettingScreen implements Screen {
                 game.setScreen(new MainMenuScreen(game));
             }
         });
-
     }
+
 
 
     @Override
@@ -162,6 +154,8 @@ public class SettingScreen implements Screen {
 
     @Override
     public void dispose() {
+
         stage.dispose();
+        font.dispose();
     }
 }

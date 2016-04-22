@@ -141,4 +141,5 @@ public class Utils {
 
         return new Animation(1f / velocity, textureFrames);
     }
+
 }

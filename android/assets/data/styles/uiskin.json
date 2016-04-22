@@ -38,4 +38,10 @@
 			cursor: cursor
 		}
 	},
+	com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+		default: {
+			background: bar_background,
+			knob: bar_knob
+		}
+	}
 }
