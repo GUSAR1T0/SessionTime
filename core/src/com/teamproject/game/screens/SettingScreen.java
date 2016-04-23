@@ -16,7 +16,6 @@ import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 
-
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
  */
@@ -28,8 +27,8 @@ public class SettingScreen implements Screen {
     private BitmapFont font;
     private Table table;
     private ImageTextButton okButton;
-
     private Utils.PointerData pointerData;
+
 
     public SettingScreen(final STGame game) {
 
@@ -69,11 +68,13 @@ public class SettingScreen implements Screen {
         });
 
         //Slider
-        Slider slider = new Slider(1, 100, 1, false, game.getSkin(), "default");
+        final Slider slider = new Slider(0, 1, 0.01f, false, game.getSkin(), "default");
+        slider.setValue(game.gameMusic.getVolume());
         slider.setAnimateDuration(0.3f);
         slider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.gameMusic.setVolume(slider.getValue());
             }
         });
 

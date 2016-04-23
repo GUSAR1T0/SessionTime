@@ -65,6 +65,9 @@ public class LoadingScreen implements Screen{
 
         //Creating animation
         animationLoading = Utils.getAnimation(textureLoading, Constants.COUNT_LOADING_TEXTURES, 10);
+
+        //Music
+        game.playMusic();
     }
 
     public void runLoading(float delta) {

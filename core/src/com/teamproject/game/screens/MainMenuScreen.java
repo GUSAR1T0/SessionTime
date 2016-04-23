@@ -40,7 +40,7 @@ public class MainMenuScreen implements Screen {
     private TextureRegionDrawable textureTableBackground;
     private Table playerTable;
     private Table buttonTable;
-    Music gameMusic;
+    public Music gameMusic;
 
     private Utils.PointerData pointerData;
 
@@ -110,13 +110,7 @@ public class MainMenuScreen implements Screen {
         playerTable.add(labelSpec).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
 
         //music
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("data/music/nuan.mp3"));
-        gameMusic.setLooping(true);
-        gameMusic.play();
-        gameMusic.setVolume(0.2f);
-        if (gameMusic.isPlaying()== false) {
-            gameMusic.play();
-        }
+
     }
 
     private void createButtonScreen() {

@@ -51,4 +51,6 @@ public class Constants {
 
     //Path to file of specialty list
     public static final String LIST_SPECIALTY = "data/textfiles/specialty.txt";
+
+    public static final String BACKGROUN_MUSIC = "data/music/nuan.mp3";
 }

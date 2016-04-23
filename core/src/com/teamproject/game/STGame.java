@@ -1,7 +1,9 @@
 package com.teamproject.game;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.teamproject.game.additions.Constants;
@@ -15,6 +17,7 @@ import com.teamproject.game.screens.LoadingScreen;
  */
 public class STGame extends Game {
 
+	public Music gameMusic;
 	private Skin mSkin;
 	private AssetManager mAssetManager;
 
@@ -42,6 +45,14 @@ public class STGame extends Game {
 		mAssetManager.load(Constants.ICON_LOGO, Texture.class);
 		mAssetManager.load(Constants.LIGHTGRAY_STAR, Texture.class);
 		mAssetManager.load(Constants.DARKGRAY_STAR, Texture.class);
+	}
+
+	public void playMusic(){
+
+		gameMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.BACKGROUN_MUSIC));
+		gameMusic.setLooping(true);
+		gameMusic.play();
+		gameMusic.setVolume(0.2f);
 	}
 
 	@Override
