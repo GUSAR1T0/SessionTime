@@ -2,6 +2,7 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -102,15 +103,23 @@ public class LoadingScreen implements Screen{
         stage.act(delta);
 
         //Adding and updating loading textures on stage
-        if (stateTime < 4) runLoading(delta);
+
+        //WARNING: here it should be "stateTime < 3"!
+        if (stateTime == 0) runLoading(delta);
         else
             if (game.getManager().update()) {
 
                 dispose();
 
+                //Getting from asset manager skin and background music
                 game.setSkin(game.getManager().get(Constants.SKIN, Skin.class));
+                game.setGameMusic(game.getManager().get(Constants.BACKGROUND_MUSIC, Music.class));
                 game.getManager().finishLoading();
 
+                //Start of playing background music
+                game.playMusic();
+
+                //Choosing screen
                 if (Utils.isEmpty()) game.setScreen(new LoginScreen(game));
                 else game.setScreen(new MainMenuScreen(game));
             }

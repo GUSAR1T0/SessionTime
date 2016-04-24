@@ -2,7 +2,6 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -40,7 +39,7 @@ public class MainMenuScreen implements Screen {
     private Table playerTable;
     private Table buttonTable;
 
-    private Utils.PointerData pointerData;
+    private Utils.TextureData textureData;
 
     public MainMenuScreen(final STGame game) {
 
@@ -100,8 +99,8 @@ public class MainMenuScreen implements Screen {
                     padLeft(2).padRight(2);
         }
         playerTable.row();
-        playerTable.add(imageIconPlayer).width(3/16f * stage.getWidth()).
-                height(3/16f * stage.getWidth()).colspan(Constants.COUNT_STARS_B);
+        playerTable.add(imageIconPlayer).width(3 / 16f * stage.getWidth()).
+                height(3 / 16f * stage.getWidth()).colspan(Constants.COUNT_STARS_B);
         playerTable.row();
         playerTable.add(labelName).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
         playerTable.row();
@@ -114,14 +113,14 @@ public class MainMenuScreen implements Screen {
         fontButton = Utils.getFont("BebasNeue.otf", 58);
 
         //Creating style for ImageTextButton
-        pointerData = Utils.getImageTextButton((int) (stage.getWidth() / 2),
+        textureData = Utils.getImageTextButton((int) (stage.getWidth() / 2),
                 (int) (stage.getHeight() * 7 / 40),
                 "#F2F2F2", "#666666",
                 "#445565", "#F2F2F2",
                 fontButton);
 
         //Creating ImageTextButtons
-        ImageTextButton.ImageTextButtonStyle style = pointerData.style;
+        ImageTextButton.ImageTextButtonStyle style = textureData.style;
 
         ImageTextButton playButton = new ImageTextButton("Играть", style);
         // TODO: 11.04.2016 to add listener for playButton
@@ -136,10 +135,8 @@ public class MainMenuScreen implements Screen {
         settingsButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                FileHandle file = Gdx.files.local(Constants.PLAYER);
-                file.delete();
                 dispose();
-                game.setScreen(new LoginScreen(game));
+                game.setScreen(new SettingScreen(game));
             }
         });
 
@@ -208,9 +205,9 @@ public class MainMenuScreen implements Screen {
         fontButton.dispose();
         pixmapTableBackground.dispose();
         textureTableBackground.getRegion().getTexture().dispose();
-        pointerData.texture1.getRegion().getTexture().dispose();
-        pointerData.texture2.getRegion().getTexture().dispose();
-        pointerData.pixmap1.dispose();
-        pointerData.pixmap2.dispose();
+        textureData.texture1.getRegion().getTexture().dispose();
+        textureData.texture2.getRegion().getTexture().dispose();
+        textureData.pixmap1.dispose();
+        textureData.pixmap2.dispose();
     }
 }

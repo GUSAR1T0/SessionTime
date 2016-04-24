@@ -20,9 +20,6 @@ public class Constants {
     //Title of game
     public static final String TITLE = "Session Time";
 
-    //Scaling factor for Android devices
-    public static final float SCALING_FACTOR = (float) Gdx.graphics.getHeight() / 2880 ;
-
     //The ratio of height and width
     public static final float RATIO = (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
 
@@ -43,12 +40,15 @@ public class Constants {
     public static final String LIGHTGRAY_STAR = "data/images/stars/lightgray_star.png";
     public static final String DARKGRAY_STAR = "data/images/stars/darkgray_star.png";
 
-    //Path to file of authorization
+    //Path to file of player data
     public static final String PLAYER = "player";
 
     //Path to file of style
     public static final String SKIN = "data/styles/uiskin.json";
 
-    //Path to file of specialty list
+    //Path to file of text list
     public static final String LIST_SPECIALTY = "data/textfiles/specialty.txt";
+
+    //Path to file of music
+    public static final String BACKGROUND_MUSIC = "data/music/nuan.mp3";
 }
