@@ -33,9 +33,8 @@ public class LoginScreen implements Screen {
     private Stage stage;
     private BitmapFont font;
     private Table table;
-    private ImageTextButton okButton;
 
-    private Utils.PointerData pointerData;
+    private Utils.TextureData textureData;
 
     public LoginScreen(final STGame game) {
 
@@ -63,16 +62,18 @@ public class LoginScreen implements Screen {
 
     private void createLoginScreen() {
 
+        //Getting skin for UIs
         Skin skin = game.getSkin();
 
         //Getting font for labels
         font = Utils.getFont("BebasNeue.otf", 58);
 
         //Setting labels
-        Label greeting = new Label("Привет студент!",
+        Label labelWelcome = new Label("Привет, студент!\n" +
+                "Создай новый профиль для входа в игру",
                 new Label.LabelStyle(font,  Color.valueOf("#F2F2F2")));
-        Label labelEnterData = new Label("Создай новый профиль для входа в игру",
-                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
+        labelWelcome.setAlignment(Align.center);
+
         Label labelName = new Label("Имя:", new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelSpecialty = new Label("Специальность:",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
@@ -93,34 +94,19 @@ public class LoginScreen implements Screen {
 
         selectBox.setItems(specList);
 
-        //Setting table for entering and choosing
-        table = new Table();
-        table.setFillParent(true);
-
-        //Adding elements on table
-        table.setPosition(stage.getWidth()/4 - greeting.getWidth(),
-                stage.getHeight()/5 - greeting.getHeight());
-        table.add(greeting).colspan(2).center();
-        table.row();
-        table.add(labelEnterData).colspan(2).center().padBottom(20).pad(90,0,0,0);
-        table.row();
-        table.add(labelName).center();
-        table.add(textField).pad(30).width(4 * stage.getWidth() / 9f);
-        table.row();
-        table.add(labelSpecialty).center();
-        table.add(selectBox).pad(30).width(4 * stage.getWidth() / 9f);
-
         //Setting button (for going to MainMenuScreen class)
-        pointerData = Utils.getImageTextButton(
-                "green", "#F2F2F2", "#F2F2F2",
+        textureData = Utils.getImageTextButton((int) (stage.getWidth() / 4f),
+                (int) (stage.getHeight() / 9f),
+                "#76A790", "#666666",
+                "#F2F2F2", "#F2F2F2",
                 font);
 
-        ImageTextButton.ImageTextButtonStyle style = pointerData.style;
+        ImageTextButton.ImageTextButtonStyle style = textureData.style;
 
-        okButton = new ImageTextButton("OK", style);
-        okButton.setPosition(stage.getWidth() - okButton.getWidth() - 30,
-                stage.getHeight() / 5f - okButton.getHeight() - 10);
-        okButton.addListener(new ChangeListener() {
+        ImageTextButton buttonOK = new ImageTextButton("OK", style);
+        buttonOK.setPosition(stage.getWidth() - buttonOK.getWidth() - 30,
+                stage.getHeight() / 5f - buttonOK.getHeight() - 10);
+        buttonOK.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //If text field isn't empty then ...
@@ -131,6 +117,26 @@ public class LoginScreen implements Screen {
                 }
             }
         });
+
+        //Setting table for entering and choosing
+        table = new Table();
+
+        table.setFillParent(true);
+
+        //Adding elements on table
+        table.add(labelWelcome).colspan(2).center().expand();
+        table.row();
+        table.add(labelName).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.add(textField).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.row();
+        table.add(labelSpecialty).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.add(selectBox).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.row();
+        table.add(buttonOK).colspan(2).center().expand();
     }
 
     @Override
@@ -138,7 +144,6 @@ public class LoginScreen implements Screen {
 
         //Adding Actors on stage
         stage.addActor(table);
-        stage.addActor(okButton);
 
         //Debugging position of table
 //        table.setDebug(true);
@@ -182,7 +187,9 @@ public class LoginScreen implements Screen {
 
         stage.dispose();
         font.dispose();
-        pointerData.texture1.getRegion().getTexture().dispose();
-        pointerData.texture2.getRegion().getTexture().dispose();
+        textureData.texture1.getRegion().getTexture().dispose();
+        textureData.texture2.getRegion().getTexture().dispose();
+        textureData.pixmap1.dispose();
+        textureData.pixmap2.dispose();
     }
 }

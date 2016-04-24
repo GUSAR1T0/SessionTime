@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.ArrayList;
@@ -23,14 +22,14 @@ import java.util.ArrayList;
  */
 public class Utils {
 
-    public static class PointerData {
+    /* This class help to save pointer on texture and pixmap for disposing */
+    public static class TextureData {
 
         public TextureRegionDrawable texture1;
         public TextureRegionDrawable texture2;
         public Pixmap pixmap1;
         public Pixmap pixmap2;
         public ImageTextButton.ImageTextButtonStyle style;
-        public Slider.SliderStyle styleSlide;
     }
 
     /* This method sets background color through GL-methods */
@@ -58,38 +57,14 @@ public class Utils {
         return file.length() == 0;
     }
 
-    /* This method creates buttons through images */
-    public static PointerData getImageTextButton
-            (String buttonColor, String upTextColor, String downTextColor,
-             BitmapFont font) {
-
-        PointerData temp = new PointerData();
-
-        TextureRegionDrawable texture1 = new TextureRegionDrawable(new TextureRegion(
-                new Texture("data/images/buttons/" + buttonColor + "_button.png")));
-        TextureRegionDrawable texture2 = new TextureRegionDrawable(new TextureRegion(
-                new Texture("data/images/buttons/button_pressed.png")));
-
-        temp.texture1 = texture1;
-        temp.texture2 = texture2;
-
-        temp.style = new ImageTextButton.ImageTextButtonStyle(
-            texture1, texture2, texture1, font);
-
-        temp.style.fontColor = Color.valueOf(upTextColor);
-        temp.style.downFontColor = Color.valueOf(downTextColor);
-
-        return temp;
-    }
-
     /* This methods creates buttons through pixmap */
-    public static PointerData getImageTextButton
+    public static TextureData getImageTextButton
             (int width, int height,
              String upButtonColor, String downButtonColor,
              String upTextColor, String downTextColor,
              BitmapFont font) {
 
-        PointerData temp = new PointerData();
+        TextureData temp = new TextureData();
 
         temp.pixmap1 = setPixmapColor(width, height, upButtonColor);
         temp.pixmap2 = setPixmapColor(width, height, downButtonColor);
@@ -141,5 +116,4 @@ public class Utils {
 
         return new Animation(1f / velocity, textureFrames);
     }
-
 }

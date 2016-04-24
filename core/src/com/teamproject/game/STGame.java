@@ -1,7 +1,6 @@
 package com.teamproject.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,8 +16,8 @@ import com.teamproject.game.screens.LoadingScreen;
  */
 public class STGame extends Game {
 
-	public Music gameMusic;
 	private Skin mSkin;
+	private Music gameMusic;
 	private AssetManager mAssetManager;
 
 	public Skin getSkin() {
@@ -27,6 +26,14 @@ public class STGame extends Game {
 
 	public void setSkin(Skin skin) {
 		mSkin = skin;
+	}
+
+	public Music getGameMusic() {
+		return gameMusic;
+	}
+
+	public void setGameMusic(Music music) {
+		gameMusic = music;
 	}
 
 	public AssetManager getManager() {
@@ -41,18 +48,20 @@ public class STGame extends Game {
 
 		//Setting manager and loading general assets
 		mAssetManager.load(Constants.SKIN, Skin.class);
+		mAssetManager.load(Constants.BACKGROUND_MUSIC, Music.class);
 		mAssetManager.load(Constants.ICON_CAT, Texture.class);
 		mAssetManager.load(Constants.ICON_LOGO, Texture.class);
 		mAssetManager.load(Constants.LIGHTGRAY_STAR, Texture.class);
 		mAssetManager.load(Constants.DARKGRAY_STAR, Texture.class);
 	}
 
-	public void playMusic(){
+	public void playMusic() {
 
-		gameMusic = Gdx.audio.newMusic(Gdx.files.internal(Constants.BACKGROUN_MUSIC));
+		//Start to playing background music
+		gameMusic = mAssetManager.get(Constants.BACKGROUND_MUSIC, Music.class);
 		gameMusic.setLooping(true);
 		gameMusic.play();
-		gameMusic.setVolume(0.2f);
+		gameMusic.setVolume(0.5f);
 	}
 
 	@Override
@@ -69,6 +78,7 @@ public class STGame extends Game {
 
 	@Override
 	public void dispose() {
+
 		super.dispose();
 		mSkin.dispose();
 		mAssetManager.dispose();
