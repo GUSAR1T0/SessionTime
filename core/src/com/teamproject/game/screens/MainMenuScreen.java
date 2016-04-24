@@ -2,19 +2,19 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.teamproject.game.STGame;
-import com.teamproject.game.additions.Constant;
+import com.teamproject.game.additions.Constants;
+import com.teamproject.game.additions.Utils;
 
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
@@ -22,49 +22,58 @@ import com.teamproject.game.additions.Constant;
  * This class is view of game menu.
  * The main operations:
  * - setting stage;
+ * - adding logo of game;
  * - creating table and adding buttons;
- * - drawing background, images for logo and buttons.
+ * - drawing background and actors.
  */
-public class MenuScreen implements Screen {
+public class MainMenuScreen implements Screen {
 
-    private Texture background;
-    private Sprite logo;
+    private STGame game;
     private Stage stage;
-    private ImageButton playButton, settingButton, menuButton;
+    private Sprite logo;
     private Table table;
-    private final STGame game;
 
-    public MenuScreen(STGame game) {
+    public MainMenuScreen(STGame game) {
 
         this.game = game;
 
+        //Initialization stage
         stage = new Stage();
         Gdx.input.setInputProcessor(stage);
 
+        //Adding elements
         createMenuScreen();
     }
 
     private void createMenuScreen() {
         //Setting background texture
-        background = new Texture(Gdx.files.internal(Constant.MENU_BACKGROUND));
+        game.setBackground(new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND)));
 
         //Setting logo texture
-        logo = new Sprite(new Texture(Gdx.files.internal("logo.png")));
-        logo.setSize(logo.getWidth() * 2 * Constant.SCALING_FACTOR,
-                logo.getHeight() * 2 * Constant.SCALING_FACTOR);
+        logo = new Sprite(new Texture(Gdx.files.internal(Constants.LOGO)));
+        logo.setSize(logo.getWidth() * 2 * Constants.SCALING_FACTOR,
+                logo.getHeight() * 2 * Constants.SCALING_FACTOR);
         logo.setPosition(Gdx.graphics.getWidth() / 2 - logo.getWidth() / 2,
                 Gdx.graphics.getHeight() * 6 / 7 - logo.getHeight() / 2);
 
         //Setting menu buttons
-        playButton = makeButton("play_button");
+        ImageButton playButton = Utils.makeButton("play_button");
+        playButton.setSize(playButton.getWidth() * 2 * Constants.SCALING_FACTOR,
+                playButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         playButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game));
+                FileHandle file = Gdx.files.local(Constants.PERSON);
+
+                //If file of PERSON DATA isn't empty then ... else ...
+                if (file.length() > 0) game.setScreen(new GameMenuScreen(game));
+                else if (file.length() == 0) game.setScreen(new LoginScreen(game));
             }
         });
 
-        settingButton = makeButton("setting_button");
+        ImageButton settingButton = Utils.makeButton("setting_button");
+        settingButton.setSize(settingButton.getWidth() * 2 * Constants.SCALING_FACTOR,
+                settingButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         settingButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -72,11 +81,17 @@ public class MenuScreen implements Screen {
             }
         });
 
-        menuButton = makeButton("menu_button");
+        ImageButton menuButton = Utils.makeButton("menu_button");
+        menuButton.setSize(menuButton.getWidth() * 2 * Constants.SCALING_FACTOR,
+                menuButton.getHeight() * 2 * Constants.SCALING_FACTOR);
         menuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new GameScreen(game));
+                /* TODO: 02.04.2016, make useful item of MainMenuScreen
+                 * This item of menu deletes local file of personal data
+                 */
+                FileHandle file = Gdx.files.local(Constants.PERSON);
+                file.delete();
             }
         });
 
@@ -85,31 +100,16 @@ public class MenuScreen implements Screen {
         table.setFillParent(true);
         table.align(Align.center | Align.bottom);
         table.padBottom(stage.getHeight() / 20);
-    }
 
-    private ImageButton makeButton(String name) {
-        //Creating button for menu
-        TextureRegionDrawable buttonUp =
-                new TextureRegionDrawable(new TextureRegion(new Texture(name + ".png")));
-        TextureRegionDrawable buttonDown =
-                new TextureRegionDrawable(new TextureRegion(new Texture(name + "_pressed.png")));
-
-        ImageButton button = new ImageButton(buttonUp, buttonDown);
-        button.setSize(button.getWidth() * 2 * Constant.SCALING_FACTOR,
-                button.getHeight() * 2 * Constant.SCALING_FACTOR);
-
-        return button;
+        //Adding elements on table
+        table.add(playButton).height(playButton.getHeight()).width(playButton.getWidth()).expandX();
+        table.add(settingButton).height(settingButton.getHeight()).width(settingButton.getWidth()).expandX();
+        table.add(menuButton).height(menuButton.getHeight()).width(menuButton.getWidth()).expandX();
     }
 
     @Override
     public void show() {
-
-        //Adding elements on table
-        table.add(playButton).height(playButton.getHeight()).expandX();
-        table.add(settingButton).height(settingButton.getHeight()).expandX();
-        table.add(menuButton).height(menuButton.getHeight()).expandX();
-
-        //Adding Actor on Stage
+        //Adding actor (table) on stage
         stage.addActor(table);
     }
 
@@ -118,13 +118,14 @@ public class MenuScreen implements Screen {
         //Clear screen and color blue
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //Drawing all graphic elements
+        //Drawing all graphic elements (without actors)
         stage.getBatch().begin();
-        stage.getBatch().draw(background, 0, 0);
+        stage.getBatch().draw(game.getBackground(), 0, 0);
         logo.draw(stage.getBatch());
         stage.getBatch().end();
 
-        stage.draw();               //Drawing Actors
+        //Drawing actors
+        stage.draw();
     }
 
     @Override
@@ -149,8 +150,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        background.dispose();
         stage.dispose();
-        game.dispose();
+        logo.getTexture().dispose();
     }
 }

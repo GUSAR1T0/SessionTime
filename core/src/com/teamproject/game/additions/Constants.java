@@ -7,15 +7,15 @@ import com.badlogic.gdx.Gdx;
  *
  * This structure set all needful constants.
  */
-public class Constant {
+public class Constants {
 
     //Size of Desktop application
     public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
 
     //Width and height of World
-    public static final int WORLD_WIDTH = 1000;
-    public static final int WORLD_HEIGHT = 1000;
+    public static final int WORLD_WIDTH = 1250;
+    public static final int WORLD_HEIGHT = 1250;
 
     //Title of game
     public static final String TITLE = "Session Time";
@@ -31,6 +31,14 @@ public class Constant {
             "abcdefghijklmnopqrstuvwxyz" + "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 
-    //Path to background texture
-    public static final String MENU_BACKGROUND = "menu_background_2560x1600.png";
+    //Path to textures
+    public static final String MENU_BACKGROUND = "data/images/menu_background_2560x1600.png";
+    public static final String LOGO = "data/images/logo.png";
+    public static final String ICON_CAT = "data/images/icon_cat.png";
+
+    //Path to file of authorization
+    public static final String PERSON = "person";
+
+    //Path to file of style
+    public static final String SKIN = "data/styles/uiskin.json";
 }
