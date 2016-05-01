@@ -51,6 +51,8 @@ public class STGame extends Game {
 		mAssetManager.load(Constants.BACKGROUND_MUSIC, Music.class);
 		mAssetManager.load(Constants.ICON_CAT, Texture.class);
 		mAssetManager.load(Constants.ICON_LOGO, Texture.class);
+		mAssetManager.load(Constants.ICON_CASH, Texture.class);
+		mAssetManager.load(Constants.ICON_ENERGY, Texture.class);
 		mAssetManager.load(Constants.LIGHTGRAY_STAR, Texture.class);
 		mAssetManager.load(Constants.DARKGRAY_STAR, Texture.class);
 	}
@@ -61,7 +63,9 @@ public class STGame extends Game {
 		gameMusic = mAssetManager.get(Constants.BACKGROUND_MUSIC, Music.class);
 		gameMusic.setLooping(true);
 		gameMusic.play();
-		gameMusic.setVolume(0.5f);
+
+//		WARNING: here it should be "gameMusic.setVolume(0.2f);"
+		gameMusic.setVolume(0);
 	}
 
 	@Override

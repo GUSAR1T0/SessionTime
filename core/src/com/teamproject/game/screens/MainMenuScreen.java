@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -36,7 +37,8 @@ public class MainMenuScreen implements Screen {
     private BitmapFont fontButton;
     private Pixmap pixmapTableBackground;
     private TextureRegionDrawable textureTableBackground;
-    private Table playerTable;
+    private ArrayList<Table> playerTable = new ArrayList<Table>();
+    private ScrollPane scrollPlayerTable;
     private Table buttonTable;
 
     private Utils.TextureData textureData;
@@ -79,32 +81,63 @@ public class MainMenuScreen implements Screen {
         }
 
         //Adding icon of PLAYER
-        Image imageIconPlayer = new Image(game.getManager().get(Constants.ICON_CAT, Texture.class));
+        Image iconPlayer = new Image(game.getManager().get(Constants.ICON_CAT, Texture.class));
 
-        //Setting table for data of PLAYER
-        playerTable = new Table();
+        //Adding icon of CASH and ENERGY
+        Image iconCash = new Image(game.getManager().get(Constants.ICON_CASH, Texture.class));
+        Image iconEnergy = new Image(game.getManager().get(Constants.ICON_ENERGY, Texture.class));
 
-        playerTable.setWidth(stage.getWidth() * 3/8f);
-        playerTable.setHeight(stage.getHeight());
+        //Adding labels for show information about cash and energy
+        Label labelCash = new Label(player.getCash() + "",
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+        Label labelEnergy = new Label(player.getEnergy() + "",
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
-        pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
-        textureTableBackground = new TextureRegionDrawable(new TextureRegion(
-                new Texture(pixmapTableBackground)));
-
-        playerTable.setBackground(textureTableBackground);
+        //Setting table for general data of PLAYER
+        Table infoTable = new Table();
+        infoTable.setWidth(stage.getWidth() * 3/8f);
+        infoTable.setHeight(stage.getHeight());
 
         for (int i = 0; i < Constants.COUNT_STARS_B; i++) {
-            playerTable.add(iconStar.get(i)).width(6 / 150f * stage.getWidth()).
-                    height(6 / 150f * stage.getWidth()).padBottom(stage.getHeight() / 15f).
-                    padLeft(2).padRight(2);
+            infoTable.add(iconStar.get(i)).width(6 / 150f * stage.getWidth()).
+                    height(6 / 150f * stage.getWidth()).
+                    padLeft(2).padRight(2).expand();
         }
-        playerTable.row();
-        playerTable.add(imageIconPlayer).width(3 / 16f * stage.getWidth()).
-                height(3 / 16f * stage.getWidth()).colspan(Constants.COUNT_STARS_B);
-        playerTable.row();
-        playerTable.add(labelName).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
-        playerTable.row();
-        playerTable.add(labelSpec).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
+        infoTable.row();
+        infoTable.add(iconPlayer).width(3 / 16f * stage.getWidth()).
+                height(3 / 16f * stage.getWidth()).colspan(Constants.COUNT_STARS_B).expand();
+        infoTable.row();
+        infoTable.add(labelName).colspan(Constants.COUNT_STARS_B).expand();
+        infoTable.row();
+        infoTable.add(labelSpec).colspan(Constants.COUNT_STARS_B).expand();
+
+        //Adding infoTable in array for scrolling
+        playerTable.add(infoTable);
+
+        //Setting table for resources data of PLAYER
+        Table resourcesTable = new Table();
+        resourcesTable.setWidth(stage.getWidth() * 3/8f);
+        resourcesTable.setHeight(stage.getHeight());
+
+//        resourcesTable.add(labelName).colspan(2).expand();
+//        resourcesTable.row();
+//        resourcesTable.add(labelSpec).colspan(2).expand();
+//        resourcesTable.row();
+        resourcesTable.add(iconCash).width(1 / 10f * stage.getWidth()).height(1 / 10f * stage.getWidth())
+                .expand();
+        resourcesTable.add(labelCash)
+                .expand();
+        resourcesTable.row();
+        resourcesTable.add(iconEnergy).width(1 / 10f * stage.getWidth()).height(1 / 10f * stage.getWidth())
+                .expand();
+        resourcesTable.add(labelEnergy)
+                .expand();
+
+        //Adding resourcesTable in array for scrolling
+        playerTable.add(resourcesTable);
+
+        //Setting of scrolling
+        showSectionPlayerData();
     }
 
     private void createButtonScreen() {
@@ -156,12 +189,39 @@ public class MainMenuScreen implements Screen {
         buttonTable.add(settingsButton).expand();
     }
 
+    private void showSectionPlayerData() {
+
+        //Setting background of information tables
+        pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
+        textureTableBackground = new TextureRegionDrawable(new TextureRegion(
+                new Texture(pixmapTableBackground)));
+
+        //Integration information tables in one table (division on sections)
+        Table sections = new Table();
+        sections.setBackground(textureTableBackground);
+
+        sections.add(playerTable.get(0)).width(stage.getWidth() * 3/8f).height(stage.getHeight());
+        sections.add(playerTable.get(1)).width(stage.getWidth() * 3/8f).height(stage.getHeight());
+
+        //Adding scrolling
+        scrollPlayerTable = new ScrollPane(sections);
+        scrollPlayerTable.setWidth(stage.getWidth() * 3/8f);
+        scrollPlayerTable.setHeight(stage.getHeight());
+
+        //Setting parameters of scrolling
+        scrollPlayerTable.setOverscroll(false, false);
+        scrollPlayerTable.setupFadeScrollBars(0, 0);
+    }
+
     @Override
     public void show() {
 
         //Adding actor (table) on stage
-        stage.addActor(playerTable);
+        stage.addActor(scrollPlayerTable);
         stage.addActor(buttonTable);
+
+        //Debugging all position of stage elements
+//        stage.setDebugAll(true);
     }
 
     @Override
@@ -175,6 +235,25 @@ public class MainMenuScreen implements Screen {
 
         //Updating of graphic elements
         stage.act(delta);
+
+        //Offset control of table with scroll
+        if (!scrollPlayerTable.isPanning()) {
+            float position = scrollPlayerTable.getScrollX() / (stage.getWidth() * 3 / 8f);
+
+            //If it's the first section...
+            if ((position > 0) && (position <= 0.5f)) {
+                if (scrollPlayerTable.getScrollX() >= 10)
+                    scrollPlayerTable.setScrollX(scrollPlayerTable.getScrollX() - 10);
+                else scrollPlayerTable.setScrollX(0);
+            }
+
+            //If it's the second section...
+            if ((position > 0.5f) && (position <= 1)) {
+                if (scrollPlayerTable.getScrollX() <= stage.getWidth() * 3 / 8 - 10)
+                    scrollPlayerTable.setScrollX(scrollPlayerTable.getScrollX() + 10);
+                else scrollPlayerTable.setScrollX(stage.getWidth() * 3 / 8f);
+            }
+        }
     }
 
     @Override
