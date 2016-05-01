@@ -181,7 +181,7 @@ public class SettingScreen implements Screen {
 
     @Override
     public void pause() {
-
+        game.saveData(game.getPlayerData());
     }
 
     @Override

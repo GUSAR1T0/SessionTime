@@ -203,7 +203,7 @@ public class ConfirmScreen implements Screen {
 
     @Override
     public void pause() {
-
+        game.saveData(game.getPlayerData());
     }
 
     @Override

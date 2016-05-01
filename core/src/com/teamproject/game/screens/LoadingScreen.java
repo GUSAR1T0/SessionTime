@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
 
 import java.util.ArrayList;
 
@@ -121,7 +122,10 @@ public class LoadingScreen implements Screen{
 
                 //Choosing screen
                 if (Utils.isEmpty()) game.setScreen(new LoginScreen(game));
-                else game.setScreen(new MainMenuScreen(game));
+                else {
+                    game.setPlayerData(Student.readPlayerData());
+                    game.setScreen(new MainMenuScreen(game));
+                }
             }
             else
                 runLoading(delta);

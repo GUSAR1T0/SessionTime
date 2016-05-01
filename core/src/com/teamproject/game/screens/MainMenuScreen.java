@@ -59,8 +59,8 @@ public class MainMenuScreen implements Screen {
 
     private void createDataScreen() {
 
-        //Reading data of PLAYER from local file
-        Student player = Student.readStudentData();
+        //Getting player data
+        Student player = game.getPlayerData();
 
         //Getting font for labels
         fontData = Utils.getFont("BebasNeue.otf", 46);
@@ -68,7 +68,7 @@ public class MainMenuScreen implements Screen {
         //Label shows data of PLAYER
         Label labelName = new Label(player.getName(),
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
-        Label labelSpec = new Label(player.getSpecialty(),
+        Label labelSpec = new Label(player.getNameOfSpecialty(),
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
         //Adding icons of light-gray and dark-gray stars
@@ -116,24 +116,46 @@ public class MainMenuScreen implements Screen {
 
         //Setting table for resources data of PLAYER
         Table resourcesTable = new Table();
-        resourcesTable.setWidth(stage.getWidth() * 3/8f);
+        resourcesTable.setWidth(stage.getWidth() * 3 / 8f);
         resourcesTable.setHeight(stage.getHeight());
 
-        resourcesTable.add(iconCash).width(1 / 10f * stage.getWidth()).height(1 / 10f * stage.getWidth())
-                .expand();
-        resourcesTable.add(labelCash)
-                .expand();
+        resourcesTable.add(iconCash).width(1 / 8f * stage.getWidth())
+                .height(1 / 8f * stage.getWidth()).expand();
+        resourcesTable.add(labelCash).expand();
         resourcesTable.row();
-        resourcesTable.add(iconEnergy).width(1 / 10f * stage.getWidth()).height(1 / 10f * stage.getWidth())
-                .expand();
-        resourcesTable.add(labelEnergy)
-                .expand();
+        resourcesTable.add(iconEnergy).width(1 / 8f * stage.getWidth())
+                .height(1 / 8f * stage.getWidth()).expand();
+        resourcesTable.add(labelEnergy).expand();
 
         //Adding resourcesTable in array for scrolling
         playerTable.add(resourcesTable);
 
         //Setting of scrolling
         showSectionPlayerData();
+    }
+
+    private void showSectionPlayerData() {
+
+        //Setting background of information tables
+        pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
+        textureTableBackground = new TextureRegionDrawable(new TextureRegion(
+                new Texture(pixmapTableBackground)));
+
+        //Integration information tables in one table (division on sections)
+        Table sections = new Table();
+        sections.setBackground(textureTableBackground);
+
+        sections.add(playerTable.get(0)).width(stage.getWidth() * 3 / 8f).height(stage.getHeight());
+        sections.add(playerTable.get(1)).width(stage.getWidth() * 3 / 8f).height(stage.getHeight());
+
+        //Adding scrolling
+        scrollPlayerTable = new ScrollPane(sections);
+        scrollPlayerTable.setWidth(stage.getWidth() * 3/8f);
+        scrollPlayerTable.setHeight(stage.getHeight());
+
+        //Setting parameters of scrolling
+        scrollPlayerTable.setOverscroll(false, false);
+        scrollPlayerTable.setupFadeScrollBars(0, 0);
     }
 
     private void createButtonScreen() {
@@ -172,8 +194,8 @@ public class MainMenuScreen implements Screen {
         //Setting table for button of MENU
         buttonTable = new Table();
 
-        buttonTable.setPosition(stage.getWidth() * 3/8f, 0);
-        buttonTable.setWidth(stage.getWidth() * 5/8f);
+        buttonTable.setPosition(stage.getWidth() * 3 / 8f, 0);
+        buttonTable.setWidth(stage.getWidth() * 5 / 8f);
         buttonTable.setHeight(stage.getHeight());
 
         buttonTable.add(playButton).expand();
@@ -183,30 +205,6 @@ public class MainMenuScreen implements Screen {
         buttonTable.add(helpButton).expand();
         buttonTable.row();
         buttonTable.add(settingsButton).expand();
-    }
-
-    private void showSectionPlayerData() {
-
-        //Setting background of information tables
-        pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
-        textureTableBackground = new TextureRegionDrawable(new TextureRegion(
-                new Texture(pixmapTableBackground)));
-
-        //Integration information tables in one table (division on sections)
-        Table sections = new Table();
-        sections.setBackground(textureTableBackground);
-
-        sections.add(playerTable.get(0)).width(stage.getWidth() * 3/8f).height(stage.getHeight());
-        sections.add(playerTable.get(1)).width(stage.getWidth() * 3/8f).height(stage.getHeight());
-
-        //Adding scrolling
-        scrollPlayerTable = new ScrollPane(sections);
-        scrollPlayerTable.setWidth(stage.getWidth() * 3/8f);
-        scrollPlayerTable.setHeight(stage.getHeight());
-
-        //Setting parameters of scrolling
-        scrollPlayerTable.setOverscroll(false, false);
-        scrollPlayerTable.setupFadeScrollBars(0, 0);
     }
 
     @Override
@@ -259,7 +257,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void pause() {
-
+        game.saveData(game.getPlayerData());
     }
 
     @Override

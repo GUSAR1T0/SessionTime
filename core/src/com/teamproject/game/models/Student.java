@@ -13,8 +13,10 @@ import java.util.ArrayList;
  */
 public class Student {
 
+    private static int count;
     private String name;
-    private String specialty;
+    private String specialtyS;
+    private int specialtyI;
     private int semester;
     private int cash;
     private int energy;
@@ -26,6 +28,7 @@ public class Student {
 
         setName(name);
 
+        specialtyI = specialty;
         for (int i = 0; i < specList.size(); i++)
             if (specialty == i) setSpecialty(specList.get(i));
 
@@ -35,31 +38,19 @@ public class Student {
         setAttendance(attendance);
     }
 
-    public static Student readStudentData() {
+    public static Student readPlayerData() {
 
         //Opening file to read player data
         FileHandle file = Gdx.files.local(Constants.PLAYER);
         String stringStream = file.readString();
 
         //Reading name of player
-        int i = 0;
-        String name = "";
-
-        while (true) {
-            if (stringStream.charAt(i) != '\r') {
-                name += stringStream.charAt(i++);
-            } else break;
-        }
+        count = 0;
+        String name = readLine(stringStream);
 
         //Reading specialty of player
-        i += 2;
-        String tmp = "";
-
-        while (true) {
-            if (stringStream.charAt(i) != '\r') {
-                tmp += stringStream.charAt(i++);
-            } else break;
-        }
+        count += 2;
+        String tmp = readLine(stringStream);
 
         int specialty = Integer.parseInt(tmp);
 
@@ -70,35 +61,16 @@ public class Student {
         */
 
         //Reading semester of player
-        i += 2;
-        tmp = "";
-
-        try {
-            while (true) {
-                if (stringStream.charAt(i) != '\r') {
-                    tmp += stringStream.charAt(i++);
-                } else break;
-            }
-        } catch (Exception e) {
-            while (true) {
-                if (stringStream.length() != i) {
-                    tmp += stringStream.charAt(i++);
-                } else break;
-            }
-        }
+        count += 2;
+        tmp = readLine(stringStream);
 
         int semester = Integer.parseInt(tmp);
 
         //Reading cash of player
-        i += 2;
-        tmp = "";
+        count += 2;
 
         try {
-            while (true) {
-                if (stringStream.charAt(i) != '\r') {
-                    tmp += stringStream.charAt(i++);
-                } else break;
-            }
+            tmp = readLine(stringStream);
         } catch (Exception e) {
             tmp = "1000";
         }
@@ -106,15 +78,10 @@ public class Student {
         int cash = Integer.parseInt(tmp);
 
         //Reading energy of player
-        i += 2;
-        tmp = "";
+        count += 2;
 
         try {
-            while (true) {
-                if (stringStream.charAt(i) != '\r') {
-                    tmp += stringStream.charAt(i++);
-                } else break;
-            }
+            tmp = readLine(stringStream);
         } catch (Exception e) {
             tmp = "100";
         }
@@ -122,15 +89,10 @@ public class Student {
         int energy = Integer.parseInt(tmp);
 
         //Reading attendance of player
-        i += 2;
-        tmp = "";
+        count += 2;
 
         try {
-            while (true) {
-                if (stringStream.length() != i) {
-                    tmp += stringStream.charAt(i++);
-                } else break;
-            }
+            tmp = readLine(stringStream);
         } catch (Exception e) {
             tmp = "0";
         }
@@ -140,10 +102,26 @@ public class Student {
         return new Student(name, specialty, semester, cash, energy, attendance);
     }
 
+    /* Reading line of string variable */
+    private static String readLine(String stringStream) {
+
+        String tmp = "";
+
+        while (true) {
+            if (stringStream.length() != count) {
+                if (stringStream.charAt(count) != '\r') {
+                    tmp += stringStream.charAt(count++);
+                } else break;
+            } else break;
+        }
+
+        return tmp;
+    }
+
+    /* Writing entered and chosen data of fields to file */
     public static void writeStudentData(String name, int specialty, int semester,
                                         int cash, int energy, int attendance) {
 
-        //Writing entering and choosing data of fields in file
         FileHandle file = Gdx.files.local(Constants.PLAYER);
         file.writeString(name + "\r\n" +
                 specialty + "\r\n" +
@@ -161,12 +139,16 @@ public class Student {
         this.name = name;
     }
 
-    public String getSpecialty() {
-        return specialty;
+    public String getNameOfSpecialty() {
+        return specialtyS;
+    }
+
+    public int getValueOfSpecialty() {
+        return specialtyI;
     }
 
     public void setSpecialty(String specialty) {
-        this.specialty = specialty;
+        this.specialtyS = specialty;
     }
 
     public static ArrayList<String> getSpecList() {

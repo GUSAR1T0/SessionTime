@@ -111,9 +111,9 @@ public class LoginScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 //If text field isn't empty then ...
                 if (textField.getText().length() > 0) {
-                    Student.writeStudentData(textField.getText(), selectBox.getSelectedIndex(), 0,
-                                            1000, 100, 0);
-                    dispose();
+                    game.setPlayerData(new Student(textField.getText(), selectBox.getSelectedIndex(),
+                            0, 1000, 100, 0));
+//                    game.saveData(game.getPlayerData());
                     game.setScreen(new MainMenuScreen(game));
                 }
             }
