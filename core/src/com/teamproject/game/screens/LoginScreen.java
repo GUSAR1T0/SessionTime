@@ -112,7 +112,7 @@ public class LoginScreen implements Screen {
                 //If text field isn't empty then ...
                 if (textField.getText().length() > 0) {
                     Student.writeStudentData(textField.getText(), selectBox.getSelectedIndex(), 0,
-                                            0, 0, 0);
+                                            1000, 100, 0);
                     dispose();
                     game.setScreen(new MainMenuScreen(game));
                 }

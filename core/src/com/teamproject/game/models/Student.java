@@ -100,7 +100,7 @@ public class Student {
                 } else break;
             }
         } catch (Exception e) {
-            tmp = "0";
+            tmp = "1000";
         }
 
         int cash = Integer.parseInt(tmp);
@@ -116,7 +116,7 @@ public class Student {
                 } else break;
             }
         } catch (Exception e) {
-            tmp = "0";
+            tmp = "100";
         }
 
         int energy = Integer.parseInt(tmp);

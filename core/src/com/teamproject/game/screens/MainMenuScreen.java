@@ -90,7 +90,7 @@ public class MainMenuScreen implements Screen {
         //Adding labels for show information about cash and energy
         Label labelCash = new Label(player.getCash() + "",
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
-        Label labelEnergy = new Label(player.getEnergy() + "",
+        Label labelEnergy = new Label(player.getEnergy() + " %",
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
         //Setting table for general data of PLAYER
@@ -119,10 +119,6 @@ public class MainMenuScreen implements Screen {
         resourcesTable.setWidth(stage.getWidth() * 3/8f);
         resourcesTable.setHeight(stage.getHeight());
 
-//        resourcesTable.add(labelName).colspan(2).expand();
-//        resourcesTable.row();
-//        resourcesTable.add(labelSpec).colspan(2).expand();
-//        resourcesTable.row();
         resourcesTable.add(iconCash).width(1 / 10f * stage.getWidth()).height(1 / 10f * stage.getWidth())
                 .expand();
         resourcesTable.add(labelCash)
