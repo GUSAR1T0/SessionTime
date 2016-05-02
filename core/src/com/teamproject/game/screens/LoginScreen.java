@@ -113,7 +113,7 @@ public class LoginScreen implements Screen {
                 if (textField.getText().length() > 0) {
                     game.setPlayerData(new Student(textField.getText(), selectBox.getSelectedIndex(),
                             0, 1000, 100, 0));
-//                    game.saveData(game.getPlayerData());
+                    dispose();
                     game.setScreen(new MainMenuScreen(game));
                 }
             }

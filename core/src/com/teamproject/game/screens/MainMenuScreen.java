@@ -174,7 +174,13 @@ public class MainMenuScreen implements Screen {
         ImageTextButton.ImageTextButtonStyle style = textureData.style;
 
         ImageTextButton playButton = new ImageTextButton("Играть", style);
-        // TODO: 11.04.2016 to add listener for playButton
+        playButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                dispose();
+                game.setScreen(new GameMenuScreen(game));
+            }
+        });
 
         ImageTextButton statisticsButton = new ImageTextButton("Статистика", style);
         // TODO: 11.04.2016 to add listener for statisticsButton
