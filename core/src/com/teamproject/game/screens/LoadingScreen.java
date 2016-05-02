@@ -61,9 +61,12 @@ public class LoadingScreen implements Screen{
 
         //Setting frames of loading in ArrayList
         textureLoading = new ArrayList<Texture>();
-        for (int i = 0; i < Constants.COUNT_LOADING_TEXTURES; i++)
-            textureLoading.add(new Texture(Gdx.files.internal(
-                    "data/images/loading/loading-" + i + ".png")));
+        for (int i = 0; i < Constants.COUNT_LOADING_TEXTURES; i++) {
+            Texture texture = new Texture(Gdx.files.internal(
+                    "data/images/loading/loading-" + i + ".png"));
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            textureLoading.add(texture);
+        }
 
         //Creating animation
         animationLoading = Utils.getAnimation(textureLoading, Constants.COUNT_LOADING_TEXTURES, 10);
@@ -82,6 +85,41 @@ public class LoadingScreen implements Screen{
 
         //Adding Actor on stage
         stage.addActor(imageLoading);
+    }
+
+    private void setLinearFilter() {
+
+        game.getSkin().getRegion("background").getTexture().setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+        game.getSkin().getRegion("scroll_knob").getTexture().setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+        game.getSkin().getRegion("cursor").getTexture().setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+        game.getSkin().getRegion("selection").getTexture().setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+        game.getSkin().getRegion("bar_background").getTexture().setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+        game.getSkin().getRegion("bar_knob").getTexture().setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+
+        game.getManager().get(Constants.ICON_CAT, Texture.class).
+                setFilter(Texture.TextureFilter.Linear,
+                        Texture.TextureFilter.Linear);
+        game.getManager().get(Constants.ICON_LOGO, Texture.class).
+                setFilter(Texture.TextureFilter.Linear,
+                        Texture.TextureFilter.Linear);
+        game.getManager().get(Constants.ICON_CASH, Texture.class).
+                setFilter(Texture.TextureFilter.Linear,
+                        Texture.TextureFilter.Linear);
+        game.getManager().get(Constants.ICON_ENERGY, Texture.class).
+                setFilter(Texture.TextureFilter.Linear,
+                        Texture.TextureFilter.Linear);
+        game.getManager().get(Constants.LIGHTGRAY_STAR, Texture.class).
+                setFilter(Texture.TextureFilter.Linear,
+                        Texture.TextureFilter.Linear);
+        game.getManager().get(Constants.DARKGRAY_STAR, Texture.class).
+                setFilter(Texture.TextureFilter.Linear,
+                        Texture.TextureFilter.Linear);
     }
 
     @Override
@@ -116,6 +154,9 @@ public class LoadingScreen implements Screen{
                 game.setSkin(game.getManager().get(Constants.SKIN, Skin.class));
                 game.setGameMusic(game.getManager().get(Constants.BACKGROUND_MUSIC, Music.class));
                 game.getManager().finishLoading();
+
+                //Smoothing font and textures
+                setLinearFilter();
 
                 //Start of playing background music
                 game.playMusic();

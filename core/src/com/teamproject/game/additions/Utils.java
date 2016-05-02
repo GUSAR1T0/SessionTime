@@ -116,4 +116,12 @@ public class Utils {
 
         return new Animation(1f / velocity, textureFrames);
     }
+
+    /* This method solves problem with smooth of fonts */
+    public static void setLinearFilter(BitmapFont font) {
+
+        for (int i = 0; i < font.getRegions().size; i++)
+            font.getRegion(i).getTexture().setFilter(Texture.TextureFilter.Linear,
+                    Texture.TextureFilter.Linear);
+    }
 }

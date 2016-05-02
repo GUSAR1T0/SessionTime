@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.teamproject.game.additions.Constants;
+import com.teamproject.game.additions.Utils;
 import com.teamproject.game.models.Student;
 import com.teamproject.game.screens.LoadingScreen;
 
@@ -104,6 +105,6 @@ public class STGame extends Game {
 		mSkin.dispose();
 		mAssetManager.dispose();
 
-		saveData(player);
+		if (!Utils.isEmpty()) saveData(player);
 	}
 }

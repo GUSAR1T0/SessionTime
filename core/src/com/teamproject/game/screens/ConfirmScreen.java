@@ -56,6 +56,7 @@ public class ConfirmScreen implements Screen {
 
         //Getting font for labels
         font = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(font);
 
         //Adding icon
         Image imageIconPlayer = addIcon(index);

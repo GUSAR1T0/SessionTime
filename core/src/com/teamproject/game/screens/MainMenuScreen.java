@@ -64,6 +64,7 @@ public class MainMenuScreen implements Screen {
 
         //Getting font for labels
         fontData = Utils.getFont("BebasNeue.otf", 46);
+        Utils.setLinearFilter(fontData);
 
         //Label shows data of PLAYER
         Label labelName = new Label(player.getName(),
@@ -119,12 +120,12 @@ public class MainMenuScreen implements Screen {
         resourcesTable.setWidth(stage.getWidth() * 3 / 8f);
         resourcesTable.setHeight(stage.getHeight());
 
-        resourcesTable.add(iconCash).width(1 / 8f * stage.getWidth())
-                .height(1 / 8f * stage.getWidth()).expand();
+        resourcesTable.add(iconCash).width(1 / 8f * stage.getWidth()).
+                height(1 / 8f * stage.getWidth()).expand();
         resourcesTable.add(labelCash).expand();
         resourcesTable.row();
-        resourcesTable.add(iconEnergy).width(1 / 8f * stage.getWidth())
-                .height(1 / 8f * stage.getWidth()).expand();
+        resourcesTable.add(iconEnergy).width(1 / 8f * stage.getWidth()).
+                height(1 / 8f * stage.getWidth()).expand();
         resourcesTable.add(labelEnergy).expand();
 
         //Adding resourcesTable in array for scrolling
@@ -162,6 +163,7 @@ public class MainMenuScreen implements Screen {
 
         //Getting font for text on buttons
         fontButton = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(fontButton);
 
         //Creating style for ImageTextButton
         textureData = Utils.getImageTextButton((int) (stage.getWidth() / 2),

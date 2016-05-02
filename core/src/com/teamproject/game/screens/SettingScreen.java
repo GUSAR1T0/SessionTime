@@ -77,6 +77,7 @@ public class SettingScreen implements Screen {
 
         //Getting font for labels
         font = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(font);
 
         //Setting labels
         Label labelSetting = new Label("Настройки игры",
