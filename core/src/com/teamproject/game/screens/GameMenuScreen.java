@@ -49,15 +49,15 @@ public class GameMenuScreen implements Screen {
         final Student player = game.getPlayerData();
 
         //Getting font for labels
-        font = Utils.getFont("BebasNeue.otf", 58);
+        font = Utils.getFont("BebasNeue.otf", 54);
         Utils.setLinearFilter(font);
 
         //Adding icon of CASH and ENERGY
-        Image iconCash = new Image(game.getManager().get(Constants.ICON_CASH, Texture.class));
+        Image iconCoin = new Image(game.getManager().get(Constants.ICON_COIN, Texture.class));
         Image iconEnergy = new Image(game.getManager().get(Constants.ICON_ENERGY, Texture.class));
 
         //Adding labels for show information about cash and energy
-        Label labelCash = new Label(player.getCash() + "",
+        Label labelCoin = new Label(player.getCash() + "",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelEnergy = new Label(player.getEnergy() + " %",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
@@ -74,11 +74,11 @@ public class GameMenuScreen implements Screen {
         resourcesTable.setPosition(0, stage.getHeight() * 7 / 8f);
         resourcesTable.setBackground(textureTableBackground);
 
-        resourcesTable.add(iconCash).width(stage.getWidth() * 1 / 16f).
-                height(stage.getWidth() * 1 / 16f).expand();
-        resourcesTable.add(labelCash).expand();
-        resourcesTable.add(iconEnergy).width(stage.getWidth() * 1 / 16f).
-                height(stage.getWidth() * 1 / 16f).expand();
+        resourcesTable.add(iconCoin).width(stage.getWidth() * 1 / 20f).
+                height(stage.getWidth() * 1 / 20f).expand();
+        resourcesTable.add(labelCoin).expand();
+        resourcesTable.add(iconEnergy).width(stage.getWidth() * 1 / 12f).
+                height(stage.getWidth() * 1 / 22f).expand();
         resourcesTable.add(labelEnergy).expand();
     }
 

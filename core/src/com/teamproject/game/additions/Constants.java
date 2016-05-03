@@ -38,6 +38,7 @@ public class Constants {
     public static final String ICON_CAT = "data/images/icon_cat.png";
     public static final String ICON_LOGO = "data/images/icon_logo.png";
     public static final String ICON_CASH = "data/images/icon_cash.png";
+    public static final String ICON_COIN = "data/images/icon_coin.png";
     public static final String ICON_ENERGY = "data/images/icon_energy.png";
     public static final String LIGHTGRAY_STAR = "data/images/stars/lightgray_star.png";
     public static final String DARKGRAY_STAR = "data/images/stars/darkgray_star.png";

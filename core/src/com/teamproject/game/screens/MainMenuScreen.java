@@ -124,8 +124,8 @@ public class MainMenuScreen implements Screen {
                 height(1 / 8f * stage.getWidth()).expand();
         resourcesTable.add(labelCash).expand();
         resourcesTable.row();
-        resourcesTable.add(iconEnergy).width(1 / 8f * stage.getWidth()).
-                height(1 / 8f * stage.getWidth()).expand();
+        resourcesTable.add(iconEnergy).width(1 / 10f * stage.getWidth()).
+                height(1 / 18f * stage.getWidth()).expand();
         resourcesTable.add(labelEnergy).expand();
 
         //Adding resourcesTable in array for scrolling

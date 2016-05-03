@@ -56,6 +56,7 @@ public class STGame extends Game {
 		mAssetManager.load(Constants.ICON_CAT, Texture.class);
 		mAssetManager.load(Constants.ICON_LOGO, Texture.class);
 		mAssetManager.load(Constants.ICON_CASH, Texture.class);
+		mAssetManager.load(Constants.ICON_COIN, Texture.class);
 		mAssetManager.load(Constants.ICON_ENERGY, Texture.class);
 		mAssetManager.load(Constants.LIGHTGRAY_STAR, Texture.class);
 		mAssetManager.load(Constants.DARKGRAY_STAR, Texture.class);

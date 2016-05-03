@@ -111,6 +111,9 @@ public class LoadingScreen implements Screen{
         game.getManager().get(Constants.ICON_CASH, Texture.class).
                 setFilter(Texture.TextureFilter.Linear,
                         Texture.TextureFilter.Linear);
+        game.getManager().get(Constants.ICON_COIN, Texture.class).
+                setFilter(Texture.TextureFilter.Linear,
+                        Texture.TextureFilter.Linear);
         game.getManager().get(Constants.ICON_ENERGY, Texture.class).
                 setFilter(Texture.TextureFilter.Linear,
                         Texture.TextureFilter.Linear);
