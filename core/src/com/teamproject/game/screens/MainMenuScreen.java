@@ -22,6 +22,8 @@ import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
 import com.teamproject.game.models.Student;
 
+import static com.badlogic.gdx.utils.TimeUtils.millis;
+
 import java.util.ArrayList;
 
 /**
@@ -35,6 +37,7 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private BitmapFont fontData;
     private BitmapFont fontButton;
+    private Label labelTime;
     private Pixmap pixmapTableBackground;
     private TextureRegionDrawable textureTableBackground;
     private ArrayList<Table> playerTable = new ArrayList<Table>();
@@ -52,7 +55,7 @@ public class MainMenuScreen implements Screen {
                 Constants.WORLD_WIDTH * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
 
-        //Adding elements
+        //Creating and adding elements
         createDataScreen();
         createButtonScreen();
     }
@@ -84,16 +87,6 @@ public class MainMenuScreen implements Screen {
         //Adding icon of PLAYER
         Image iconPlayer = new Image(game.getManager().get(Constants.ICON_CAT, Texture.class));
 
-        //Adding icon of CASH and ENERGY
-        Image iconCash = new Image(game.getManager().get(Constants.ICON_CASH, Texture.class));
-        Image iconEnergy = new Image(game.getManager().get(Constants.ICON_ENERGY, Texture.class));
-
-        //Adding labels for show information about cash and energy
-        Label labelCash = new Label(player.getCash() + "",
-                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
-        Label labelEnergy = new Label(player.getEnergy() + " %",
-                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
-
         //Setting table for general data of PLAYER
         Table infoTable = new Table();
         infoTable.setWidth(stage.getWidth() * 3/8f);
@@ -115,18 +108,34 @@ public class MainMenuScreen implements Screen {
         //Adding infoTable in array for scrolling
         playerTable.add(infoTable);
 
+        //Adding icon of CASH and ENERGY
+        Image iconCash = new Image(game.getManager().get(Constants.ICON_CASH, Texture.class));
+        Image iconEnergy = new Image(game.getManager().get(Constants.ICON_ENERGY, Texture.class));
+        Image iconTime = new Image(game.getManager().get(Constants.ICON_TIME, Texture.class));
+
+        //Adding labels for show information about cash and energy
+        Label labelCash = new Label(player.getCash() + "",
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+        Label labelEnergy = new Label(player.getEnergy() + "%",
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+        labelTime = new Label("", new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+
         //Setting table for resources data of PLAYER
         Table resourcesTable = new Table();
         resourcesTable.setWidth(stage.getWidth() * 3 / 8f);
         resourcesTable.setHeight(stage.getHeight());
 
-        resourcesTable.add(iconCash).width(1 / 8f * stage.getWidth()).
-                height(1 / 8f * stage.getWidth()).expand();
-        resourcesTable.add(labelCash).expand();
+        resourcesTable.add(iconCash).width(1 / 10f * stage.getWidth()).
+                height(1 / 10f * stage.getWidth()).expand();
+        resourcesTable.add(labelCash).width(1 / 10f * stage.getWidth()).expand();
         resourcesTable.row();
         resourcesTable.add(iconEnergy).width(1 / 10f * stage.getWidth()).
                 height(1 / 18f * stage.getWidth()).expand();
-        resourcesTable.add(labelEnergy).expand();
+        resourcesTable.add(labelEnergy).width(1 / 10f * stage.getWidth()).expand();
+        resourcesTable.row();
+        resourcesTable.add(iconTime).width(1 / 10f * stage.getWidth()).
+                height(1 / 10f * stage.getWidth()).expand();
+        resourcesTable.add(labelTime).width(1 / 10f * stage.getWidth()).expand();
 
         //Adding resourcesTable in array for scrolling
         playerTable.add(resourcesTable);
@@ -151,7 +160,7 @@ public class MainMenuScreen implements Screen {
 
         //Adding scrolling
         scrollPlayerTable = new ScrollPane(sections);
-        scrollPlayerTable.setWidth(stage.getWidth() * 3/8f);
+        scrollPlayerTable.setWidth(stage.getWidth() * 3 / 8f);
         scrollPlayerTable.setHeight(stage.getHeight());
 
         //Setting parameters of scrolling
@@ -215,30 +224,9 @@ public class MainMenuScreen implements Screen {
         buttonTable.add(settingsButton).expand();
     }
 
-    @Override
-    public void show() {
+    private void addScrollAction() {
 
-        //Adding actor (table) on stage
-        stage.addActor(scrollPlayerTable);
-        stage.addActor(buttonTable);
-
-        //Debugging all position of stage elements
-//        stage.setDebugAll(true);
-    }
-
-    @Override
-    public void render(float delta) {
-
-        //Setting background color #445565
-        Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
-
-        //Drawing actors
-        stage.draw();
-
-        //Updating of graphic elements
-        stage.act(delta);
-
-        //Offset control of table with scroll
+        //Managing position of scroll view
         if (!scrollPlayerTable.isPanning()) {
             float position = scrollPlayerTable.getScrollX() / (stage.getWidth() * 3 / 8f);
 
@@ -256,6 +244,36 @@ public class MainMenuScreen implements Screen {
                 else scrollPlayerTable.setScrollX(stage.getWidth() * 3 / 8f);
             }
         }
+    }
+
+    @Override
+    public void show() {
+
+        //Adding actor (table) on stage
+        stage.addActor(scrollPlayerTable);
+        stage.addActor(buttonTable);
+
+        //Debugging all position of stage elements
+//        stage.setDebugAll(true);
+    }
+
+    @Override
+    public void render(float delta) {
+
+        //Setting background color #445565
+        Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
+
+        //Updating of graphic elements
+        stage.act(delta);
+
+        //Drawing actors
+        stage.draw();
+
+        //Offset control of table with scroll
+        addScrollAction();
+
+        //Updating time
+        Utils.updateTimeOnLabel(millis() - game.getPlayerData().getTime(), labelTime);
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.teamproject.game.additions.Constants;
 
+import static com.badlogic.gdx.utils.TimeUtils.millis;
+
 import java.util.ArrayList;
 
 /**
@@ -21,10 +23,12 @@ public class Student {
     private int cash;
     private int energy;
     private int attendance;
+    private long time;
 
     private static ArrayList<String> specList = setSpecList();
 
-    public Student(String name, int specialty, int semester, int cash, int energy, int attendance) {
+    public Student(String name, int specialty, int semester, int cash,
+                   int energy, int attendance, long time) {
 
         setName(name);
 
@@ -36,6 +40,7 @@ public class Student {
         setCash(cash);
         setEnergy(energy);
         setAttendance(attendance);
+        setTime(time);
     }
 
     public static Student readPlayerData() {
@@ -55,10 +60,11 @@ public class Student {
         int specialty = Integer.parseInt(tmp);
 
         /** Next variable can be read with considering of application version:
-        *
-        * 1.0 - don't have cash, energy and attendance;
-        * 1.0.1 - added cash, energy and attendance.
-        */
+         *
+         * 1.0 - added name, specialty and semester;
+         * 1.0.1 - added cash, energy and attendance;
+         * 1.0.2 - added time of the first launching.
+         */
 
         //Reading semester of player
         count += 2;
@@ -99,7 +105,18 @@ public class Student {
 
         int attendance = Integer.parseInt(tmp);
 
-        return new Student(name, specialty, semester, cash, energy, attendance);
+        //Reading time of the first launching
+        count += 2;
+
+        try {
+            tmp = readLine(stringStream);
+        } catch (Exception e) {
+            tmp = millis() + "";
+        }
+
+        long time = Long.parseLong(tmp);
+
+        return new Student(name, specialty, semester, cash, energy, attendance, time);
     }
 
     /* Reading line of string variable */
@@ -119,8 +136,8 @@ public class Student {
     }
 
     /* Writing entered and chosen data of fields to file */
-    public static void writeStudentData(String name, int specialty, int semester,
-                                        int cash, int energy, int attendance) {
+    public static void writeStudentData(String name, int specialty, int semester, int cash,
+                                        int energy, int attendance, long time) {
 
         FileHandle file = Gdx.files.local(Constants.PLAYER);
         file.writeString(name + "\r\n" +
@@ -128,7 +145,8 @@ public class Student {
                 semester + "\r\n" +
                 cash + "\r\n" +
                 energy + "\r\n" +
-                attendance, false);
+                attendance + "\r\n" +
+                time, false);
     }
 
     public String getName() {
@@ -212,5 +230,13 @@ public class Student {
 
     public void setAttendance(int attendance) {
         this.attendance = attendance;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public long getTime() {
+        return time;
     }
 }

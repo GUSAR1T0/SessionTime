@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
@@ -102,27 +103,40 @@ public class LoadingScreen implements Screen{
         game.getSkin().getRegion("bar_knob").getTexture().setFilter(Texture.TextureFilter.Linear,
                 Texture.TextureFilter.Linear);
 
-        game.getManager().get(Constants.ICON_CAT, Texture.class).
-                setFilter(Texture.TextureFilter.Linear,
-                        Texture.TextureFilter.Linear);
-        game.getManager().get(Constants.ICON_LOGO, Texture.class).
-                setFilter(Texture.TextureFilter.Linear,
-                        Texture.TextureFilter.Linear);
-        game.getManager().get(Constants.ICON_CASH, Texture.class).
-                setFilter(Texture.TextureFilter.Linear,
-                        Texture.TextureFilter.Linear);
-        game.getManager().get(Constants.ICON_COIN, Texture.class).
-                setFilter(Texture.TextureFilter.Linear,
-                        Texture.TextureFilter.Linear);
-        game.getManager().get(Constants.ICON_ENERGY, Texture.class).
-                setFilter(Texture.TextureFilter.Linear,
-                        Texture.TextureFilter.Linear);
-        game.getManager().get(Constants.LIGHTGRAY_STAR, Texture.class).
-                setFilter(Texture.TextureFilter.Linear,
-                        Texture.TextureFilter.Linear);
-        game.getManager().get(Constants.DARKGRAY_STAR, Texture.class).
-                setFilter(Texture.TextureFilter.Linear,
-                        Texture.TextureFilter.Linear);
+        Array<Texture> t = new Array<Texture>();
+        game.getManager().getAll(Texture.class, t);
+
+        for (int i = 0; i < t.size; i++)
+            t.get(i).setFilter(Texture.TextureFilter.Linear,
+                Texture.TextureFilter.Linear);
+    }
+
+    private void addLoadingProcess() {
+
+        if (game.getManager().update()) {
+
+            dispose();
+
+            //Getting from asset manager skin and background music
+            game.setSkin(game.getManager().get(Constants.SKIN, Skin.class));
+            game.setGameMusic(game.getManager().get(Constants.BACKGROUND_MUSIC, Music.class));
+            game.getManager().finishLoading();
+
+            //Smoothing font and textures
+            setLinearFilter();
+
+            //Start of playing background music
+            game.playMusic();
+
+            //Choosing screen
+            if (Utils.isEmpty()) game.setScreen(new LoginScreen(game));
+            else {
+                game.setPlayerData(Student.readPlayerData());
+                game.setScreen(new MainMenuScreen(game));
+            }
+        }
+        else
+            runLoading(Gdx.graphics.getDeltaTime());
     }
 
     @Override
@@ -138,41 +152,14 @@ public class LoadingScreen implements Screen{
         //Setting background color #445565
         Utils.setBackgroundColor(242/255f, 242/255f, 242/255f, 1);
 
-        //Drawing actors
-        stage.draw();
-
         //Updating of graphic elements
         stage.act(delta);
 
+        //Drawing actors
+        stage.draw();
+
         //Adding and updating loading textures on stage
-
-        //WARNING: here it should be "stateTime < 3"!
-        if (stateTime == 0) runLoading(delta);
-        else
-            if (game.getManager().update()) {
-
-                dispose();
-
-                //Getting from asset manager skin and background music
-                game.setSkin(game.getManager().get(Constants.SKIN, Skin.class));
-                game.setGameMusic(game.getManager().get(Constants.BACKGROUND_MUSIC, Music.class));
-                game.getManager().finishLoading();
-
-                //Smoothing font and textures
-                setLinearFilter();
-
-                //Start of playing background music
-                game.playMusic();
-
-                //Choosing screen
-                if (Utils.isEmpty()) game.setScreen(new LoginScreen(game));
-                else {
-                    game.setPlayerData(Student.readPlayerData());
-                    game.setScreen(new MainMenuScreen(game));
-                }
-            }
-            else
-                runLoading(delta);
+        addLoadingProcess();
     }
 
     @Override

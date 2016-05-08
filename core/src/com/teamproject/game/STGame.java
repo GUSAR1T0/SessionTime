@@ -58,6 +58,7 @@ public class STGame extends Game {
 		mAssetManager.load(Constants.ICON_CASH, Texture.class);
 		mAssetManager.load(Constants.ICON_COIN, Texture.class);
 		mAssetManager.load(Constants.ICON_ENERGY, Texture.class);
+		mAssetManager.load(Constants.ICON_TIME, Texture.class);
 		mAssetManager.load(Constants.LIGHTGRAY_STAR, Texture.class);
 		mAssetManager.load(Constants.DARKGRAY_STAR, Texture.class);
 	}
@@ -68,6 +69,7 @@ public class STGame extends Game {
 		gameMusic = mAssetManager.get(Constants.BACKGROUND_MUSIC, Music.class);
 		gameMusic.setLooping(true);
 		gameMusic.play();
+		gameMusic.setPosition(1.7f);
 
 //		WARNING: here it should be "gameMusic.setVolume(0.2f);"
 		gameMusic.setVolume(0);
@@ -83,8 +85,8 @@ public class STGame extends Game {
 
 	public void saveData(Student player) {
 		Student.writeStudentData(player.getName(),
-				player.getValueOfSpecialty(), player.getSemester(),
-				player.getCash(), player.getEnergy(), player.getAttendance());
+				player.getValueOfSpecialty(), player.getSemester(), player.getCash(),
+				player.getEnergy(), player.getAttendance(), player.getTime());
 	}
 
 	@Override

@@ -190,11 +190,11 @@ public class ConfirmScreen implements Screen {
         //Setting background color #445565
         Utils.setBackgroundColor(242/255f, 242/255f, 242/255f, 1);
 
-        //Drawing actors
-        stage.draw();
-
         //Updating of graphic elements
         stage.act(delta);
+
+        //Drawing actors
+        stage.draw();
     }
 
     @Override

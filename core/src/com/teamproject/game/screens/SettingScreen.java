@@ -157,7 +157,7 @@ public class SettingScreen implements Screen {
                 if (textField.getText().length() > 0)
                     game.setPlayerData(new Student(textField.getText(),
                             player.getValueOfSpecialty(), player.getSemester(), player.getCash(),
-                            player.getEnergy(), player.getAttendance()));
+                            player.getEnergy(), player.getAttendance(), player.getTime()));
 
                 dispose();
                 game.setScreen(new MainMenuScreen(game));
@@ -210,11 +210,11 @@ public class SettingScreen implements Screen {
         //Setting background color #445565
         Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
 
-        //Drawing actors
-        stage.draw();
-
         //Updating of graphic elements
         stage.act(delta);
+
+        //Drawing actors
+        stage.draw();
     }
 
     @Override
