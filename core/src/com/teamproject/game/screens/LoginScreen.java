@@ -22,6 +22,8 @@ import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
 import com.teamproject.game.models.Student;
 
+import static com.badlogic.gdx.utils.TimeUtils.millis;
+
 /**
  * Created by Roman_Mashenkin on 29.03.2016.
  *
@@ -67,6 +69,7 @@ public class LoginScreen implements Screen {
 
         //Getting font for labels
         font = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(font);
 
         //Setting labels
         Label labelWelcome = new Label("Привет, студент!\n" +
@@ -111,7 +114,8 @@ public class LoginScreen implements Screen {
             public void changed(ChangeEvent event, Actor actor) {
                 //If text field isn't empty then ...
                 if (textField.getText().length() > 0) {
-                    Student.writeStudentData(textField.getText(), selectBox.getSelectedIndex(), 0);
+                    game.setPlayerData(new Student(textField.getText(), selectBox.getSelectedIndex(),
+                            0, 1000, 100, 0, millis()));
                     dispose();
                     game.setScreen(new MainMenuScreen(game));
                 }
@@ -155,11 +159,11 @@ public class LoginScreen implements Screen {
         //Setting background color #445565
         Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
 
-        //Drawing actors
-        stage.draw();
-
         //Updating of graphic elements
         stage.act(delta);
+
+        //Drawing actors
+        stage.draw();
     }
 
     @Override

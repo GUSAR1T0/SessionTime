@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.ArrayList;
@@ -115,5 +116,25 @@ public class Utils {
         }
 
         return new Animation(1f / velocity, textureFrames);
+    }
+
+    /* This method solves problem with smooth of fonts */
+    public static void setLinearFilter(BitmapFont font) {
+
+        for (int i = 0; i < font.getRegions().size; i++)
+            font.getRegion(i).getTexture().setFilter(Texture.TextureFilter.Linear,
+                    Texture.TextureFilter.Linear);
+    }
+
+    /* This method update time on label in format HH:MM / D */
+    public static void updateTimeOnLabel(long time, Label label) {
+
+        int minutes = (int) (time / 1E3);
+        int hours = minutes / 60;
+        int days = hours / 24;
+
+        label.setText(Constants.DECIMAL_FORMAT.format(hours % 24) + ":" +
+                Constants.DECIMAL_FORMAT.format(minutes % 60) + "\n" +
+                days);
     }
 }

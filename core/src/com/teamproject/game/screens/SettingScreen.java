@@ -6,16 +6,22 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.teamproject.game.models.Student;
 
 import java.util.ArrayList;
 
@@ -43,6 +49,17 @@ public class SettingScreen implements Screen {
                 Constants.WORLD_HEIGHT * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
 
+        //Checking keyboard focus on Actors
+        stage.getRoot().addCaptureListener(new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                if (!(event.getTarget() instanceof TextField)) {
+                    stage.setKeyboardFocus(null);
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                }
+                return false;
+            }
+        });
+
         //Getting pointer on background music
         music = game.getGameMusic();
 
@@ -52,13 +69,22 @@ public class SettingScreen implements Screen {
 
     private void createSettingScreen() {
 
+        //Getting player data
+        final Student player = game.getPlayerData();
+
+        //Getting skin for UIs
+        Skin skin = game.getSkin();
+
         //Getting font for labels
         font = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(font);
 
         //Setting labels
         Label labelSetting = new Label("Настройки игры",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelVolume = new Label("Громкость",
+                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
+        Label labelName = new Label("Имя",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelNewGame = new Label("Начать новую игру?",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
@@ -67,7 +93,7 @@ public class SettingScreen implements Screen {
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
 
         //Setting slider for manage volume of background music
-        final Slider slider = new Slider(0, 1, 0.01f, false, game.getSkin(), "default");
+        final Slider slider = new Slider(0, 1, 0.01f, false, skin, "default");
         slider.setValue(music.getVolume());
         slider.setAnimateDuration(0.1f);
         slider.addListener(new ChangeListener() {
@@ -76,6 +102,12 @@ public class SettingScreen implements Screen {
                 music.setVolume(slider.getValue());
             }
         });
+
+        //Setting text field
+        final TextField textField = new TextField("", skin, "default");
+        textField.setMaxLength(20);
+        textField.setAlignment(Align.center);
+        textField.setMessageText(game.getPlayerData().getName());
 
         //Setting objects of ImageTextButton: textureData, index == 0
         textureData.add(Utils.getImageTextButton(1, 1,
@@ -121,6 +153,12 @@ public class SettingScreen implements Screen {
         buttonOK.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                //If text field isn't empty then ...
+                if (textField.getText().length() > 0)
+                    game.setPlayerData(new Student(textField.getText(),
+                            player.getValueOfSpecialty(), player.getSemester(), player.getCash(),
+                            player.getEnergy(), player.getAttendance(), player.getTime()));
+
                 dispose();
                 game.setScreen(new MainMenuScreen(game));
             }
@@ -137,6 +175,11 @@ public class SettingScreen implements Screen {
         table.add(labelVolume).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
                 pad(20).expandX();
         table.add(slider).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.row();
+        table.add(labelName).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.add(textField).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
                 pad(20).expandX();
         table.row();
         table.add(labelNewGame).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
@@ -167,11 +210,11 @@ public class SettingScreen implements Screen {
         //Setting background color #445565
         Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
 
-        //Drawing actors
-        stage.draw();
-
         //Updating of graphic elements
         stage.act(delta);
+
+        //Drawing actors
+        stage.draw();
     }
 
     @Override
@@ -181,7 +224,7 @@ public class SettingScreen implements Screen {
 
     @Override
     public void pause() {
-
+        game.saveData(game.getPlayerData());
     }
 
     @Override

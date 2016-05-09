@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -20,6 +21,8 @@ import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
 import com.teamproject.game.models.Student;
+
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 import java.util.ArrayList;
 
@@ -34,9 +37,11 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private BitmapFont fontData;
     private BitmapFont fontButton;
+    private Label labelTime;
     private Pixmap pixmapTableBackground;
     private TextureRegionDrawable textureTableBackground;
-    private Table playerTable;
+    private ArrayList<Table> playerTable = new ArrayList<Table>();
+    private ScrollPane scrollPlayerTable;
     private Table buttonTable;
 
     private Utils.TextureData textureData;
@@ -50,23 +55,24 @@ public class MainMenuScreen implements Screen {
                 Constants.WORLD_WIDTH * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
 
-        //Adding elements
+        //Creating and adding elements
         createDataScreen();
         createButtonScreen();
     }
 
     private void createDataScreen() {
 
-        //Reading data of PLAYER from local file
-        Student player = Student.readStudentData();
+        //Getting player data
+        Student player = game.getPlayerData();
 
         //Getting font for labels
         fontData = Utils.getFont("BebasNeue.otf", 46);
+        Utils.setLinearFilter(fontData);
 
         //Label shows data of PLAYER
         Label labelName = new Label(player.getName(),
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
-        Label labelSpec = new Label(player.getSpecialty(),
+        Label labelSpec = new Label(player.getNameOfSpecialty(),
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
         //Adding icons of light-gray and dark-gray stars
@@ -79,38 +85,94 @@ public class MainMenuScreen implements Screen {
         }
 
         //Adding icon of PLAYER
-        Image imageIconPlayer = new Image(game.getManager().get(Constants.ICON_CAT, Texture.class));
+        Image iconPlayer = new Image(game.getManager().get(Constants.ICON_CAT, Texture.class));
 
-        //Setting table for data of PLAYER
-        playerTable = new Table();
+        //Setting table for general data of PLAYER
+        Table infoTable = new Table();
+        infoTable.setWidth(stage.getWidth() * 3/8f);
+        infoTable.setHeight(stage.getHeight());
 
-        playerTable.setWidth(stage.getWidth() * 3/8f);
-        playerTable.setHeight(stage.getHeight());
+        for (int i = 0; i < Constants.COUNT_STARS_B; i++) {
+            infoTable.add(iconStar.get(i)).width(6 / 150f * stage.getWidth()).
+                    height(6 / 150f * stage.getWidth()).
+                    padLeft(2).padRight(2).expand();
+        }
+        infoTable.row();
+        infoTable.add(iconPlayer).width(3 / 16f * stage.getWidth()).
+                height(3 / 16f * stage.getWidth()).colspan(Constants.COUNT_STARS_B).expand();
+        infoTable.row();
+        infoTable.add(labelName).colspan(Constants.COUNT_STARS_B).expand();
+        infoTable.row();
+        infoTable.add(labelSpec).colspan(Constants.COUNT_STARS_B).expand();
 
+        //Adding infoTable in array for scrolling
+        playerTable.add(infoTable);
+
+        //Adding icon of CASH and ENERGY
+        Image iconCash = new Image(game.getManager().get(Constants.ICON_CASH, Texture.class));
+        Image iconEnergy = new Image(game.getManager().get(Constants.ICON_ENERGY, Texture.class));
+        Image iconTime = new Image(game.getManager().get(Constants.ICON_TIME, Texture.class));
+
+        //Adding labels for show information about cash and energy
+        Label labelCash = new Label(player.getCash() + "",
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+        Label labelEnergy = new Label(player.getEnergy() + "%",
+                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+        labelTime = new Label("", new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+
+        //Setting table for resources data of PLAYER
+        Table resourcesTable = new Table();
+        resourcesTable.setWidth(stage.getWidth() * 3 / 8f);
+        resourcesTable.setHeight(stage.getHeight());
+
+        resourcesTable.add(iconCash).width(1 / 10f * stage.getWidth()).
+                height(1 / 10f * stage.getWidth()).expand();
+        resourcesTable.add(labelCash).width(1 / 10f * stage.getWidth()).expand();
+        resourcesTable.row();
+        resourcesTable.add(iconEnergy).width(1 / 10f * stage.getWidth()).
+                height(1 / 18f * stage.getWidth()).expand();
+        resourcesTable.add(labelEnergy).width(1 / 10f * stage.getWidth()).expand();
+        resourcesTable.row();
+        resourcesTable.add(iconTime).width(1 / 10f * stage.getWidth()).
+                height(1 / 10f * stage.getWidth()).expand();
+        resourcesTable.add(labelTime).width(1 / 10f * stage.getWidth()).expand();
+
+        //Adding resourcesTable in array for scrolling
+        playerTable.add(resourcesTable);
+
+        //Setting of scrolling
+        showSectionPlayerData();
+    }
+
+    private void showSectionPlayerData() {
+
+        //Setting background of information tables
         pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
         textureTableBackground = new TextureRegionDrawable(new TextureRegion(
                 new Texture(pixmapTableBackground)));
 
-        playerTable.setBackground(textureTableBackground);
+        //Integration information tables in one table (division on sections)
+        Table sections = new Table();
+        sections.setBackground(textureTableBackground);
 
-        for (int i = 0; i < Constants.COUNT_STARS_B; i++) {
-            playerTable.add(iconStar.get(i)).width(6 / 150f * stage.getWidth()).
-                    height(6 / 150f * stage.getWidth()).padBottom(stage.getHeight() / 15f).
-                    padLeft(2).padRight(2);
-        }
-        playerTable.row();
-        playerTable.add(imageIconPlayer).width(3 / 16f * stage.getWidth()).
-                height(3 / 16f * stage.getWidth()).colspan(Constants.COUNT_STARS_B);
-        playerTable.row();
-        playerTable.add(labelName).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
-        playerTable.row();
-        playerTable.add(labelSpec).padTop(stage.getHeight() / 10f).colspan(Constants.COUNT_STARS_B);
+        sections.add(playerTable.get(0)).width(stage.getWidth() * 3 / 8f).height(stage.getHeight());
+        sections.add(playerTable.get(1)).width(stage.getWidth() * 3 / 8f).height(stage.getHeight());
+
+        //Adding scrolling
+        scrollPlayerTable = new ScrollPane(sections);
+        scrollPlayerTable.setWidth(stage.getWidth() * 3 / 8f);
+        scrollPlayerTable.setHeight(stage.getHeight());
+
+        //Setting parameters of scrolling
+        scrollPlayerTable.setOverscroll(false, false);
+        scrollPlayerTable.setupFadeScrollBars(0, 0);
     }
 
     private void createButtonScreen() {
 
         //Getting font for text on buttons
         fontButton = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(fontButton);
 
         //Creating style for ImageTextButton
         textureData = Utils.getImageTextButton((int) (stage.getWidth() / 2),
@@ -123,7 +185,13 @@ public class MainMenuScreen implements Screen {
         ImageTextButton.ImageTextButtonStyle style = textureData.style;
 
         ImageTextButton playButton = new ImageTextButton("Играть", style);
-        // TODO: 11.04.2016 to add listener for playButton
+        playButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                dispose();
+                game.setScreen(new GameMenuScreen(game));
+            }
+        });
 
         ImageTextButton statisticsButton = new ImageTextButton("Статистика", style);
         // TODO: 11.04.2016 to add listener for statisticsButton
@@ -143,8 +211,8 @@ public class MainMenuScreen implements Screen {
         //Setting table for button of MENU
         buttonTable = new Table();
 
-        buttonTable.setPosition(stage.getWidth() * 3/8f, 0);
-        buttonTable.setWidth(stage.getWidth() * 5/8f);
+        buttonTable.setPosition(stage.getWidth() * 3 / 8f, 0);
+        buttonTable.setWidth(stage.getWidth() * 5 / 8f);
         buttonTable.setHeight(stage.getHeight());
 
         buttonTable.add(playButton).expand();
@@ -156,12 +224,37 @@ public class MainMenuScreen implements Screen {
         buttonTable.add(settingsButton).expand();
     }
 
+    private void addScrollAction() {
+
+        //Managing position of scroll view
+        if (!scrollPlayerTable.isPanning()) {
+            float position = scrollPlayerTable.getScrollX() / (stage.getWidth() * 3 / 8f);
+
+            //If it's the first section...
+            if ((position > 0) && (position <= 0.5f)) {
+                if (scrollPlayerTable.getScrollX() >= 10)
+                    scrollPlayerTable.setScrollX(scrollPlayerTable.getScrollX() - 10);
+                else scrollPlayerTable.setScrollX(0);
+            }
+
+            //If it's the second section...
+            if ((position > 0.5f) && (position <= 1)) {
+                if (scrollPlayerTable.getScrollX() <= stage.getWidth() * 3 / 8 - 10)
+                    scrollPlayerTable.setScrollX(scrollPlayerTable.getScrollX() + 10);
+                else scrollPlayerTable.setScrollX(stage.getWidth() * 3 / 8f);
+            }
+        }
+    }
+
     @Override
     public void show() {
 
         //Adding actor (table) on stage
-        stage.addActor(playerTable);
+        stage.addActor(scrollPlayerTable);
         stage.addActor(buttonTable);
+
+        //Debugging all position of stage elements
+//        stage.setDebugAll(true);
     }
 
     @Override
@@ -170,11 +263,17 @@ public class MainMenuScreen implements Screen {
         //Setting background color #445565
         Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
 
+        //Updating of graphic elements
+        stage.act(delta);
+
         //Drawing actors
         stage.draw();
 
-        //Updating of graphic elements
-        stage.act(delta);
+        //Offset control of table with scroll
+        addScrollAction();
+
+        //Updating time
+        Utils.updateTimeOnLabel(millis() - game.getPlayerData().getTime(), labelTime);
     }
 
     @Override
@@ -184,7 +283,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void pause() {
-
+        game.saveData(game.getPlayerData());
     }
 
     @Override

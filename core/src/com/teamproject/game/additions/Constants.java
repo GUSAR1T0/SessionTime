@@ -2,6 +2,8 @@ package com.teamproject.game.additions;
 
 import com.badlogic.gdx.Gdx;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Roman_Mashenkin on 27.03.2016.
  *
@@ -29,14 +31,21 @@ public class Constants {
     //The count of loading textures
     public static final int COUNT_LOADING_TEXTURES = 16;
 
+    //Format of time (HH:MM)
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("00");
+
     //Setting of sequence of English and Russian letters, numerals and special chars
     public static final String FONT_CHARS = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
             "abcdefghijklmnopqrstuvwxyz" + "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
 
     //Path to textures
-    public static final String ICON_CAT = "data/images/icon_cat.png";
-    public static final String ICON_LOGO = "data/images/icon_logo.png";
+    public static final String ICON_CAT = "data/images/icons/icon_cat.png";
+    public static final String ICON_LOGO = "data/images/icons/icon_logo.png";
+    public static final String ICON_CASH = "data/images/icons/icon_cash.png";
+    public static final String ICON_COIN = "data/images/icons/icon_coin.png";
+    public static final String ICON_ENERGY = "data/images/icons/icon_energy.png";
+    public static final String ICON_TIME = "data/images/icons/icon_time.png";
     public static final String LIGHTGRAY_STAR = "data/images/stars/lightgray_star.png";
     public static final String DARKGRAY_STAR = "data/images/stars/darkgray_star.png";
 
@@ -50,5 +59,5 @@ public class Constants {
     public static final String LIST_SPECIALTY = "data/textfiles/specialty.txt";
 
     //Path to file of music
-    public static final String BACKGROUND_MUSIC = "data/music/nuan.mp3";
+    public static final String BACKGROUND_MUSIC = "data/music/The xx - Intro (Long Version).mp3";
 }
