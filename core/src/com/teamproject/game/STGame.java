@@ -7,8 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Parameters;
 import com.teamproject.game.models.Student;
 import com.teamproject.game.screens.LoadingScreen;
+
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
@@ -22,7 +25,10 @@ public class STGame extends Game {
 	private Music gameMusic;
 	private AssetManager mAssetManager;
 
+	private Parameters parameters;
 	private Student player;
+
+	public int[] indexOfSubject = new int[]{};
 
 	public Skin getSkin() {
 		return mSkin;
@@ -61,18 +67,25 @@ public class STGame extends Game {
 		mAssetManager.load(Constants.ICON_TIME, Texture.class);
 		mAssetManager.load(Constants.LIGHTGRAY_STAR, Texture.class);
 		mAssetManager.load(Constants.DARKGRAY_STAR, Texture.class);
+		mAssetManager.load(Constants.BLUE_STAR, Texture.class);
 	}
 
-	public void playMusic() {
+	public void playMusic(float volume) {
 
 		//Start to playing background music
 		gameMusic = mAssetManager.get(Constants.BACKGROUND_MUSIC, Music.class);
 		gameMusic.setLooping(true);
 		gameMusic.play();
 		gameMusic.setPosition(1.7f);
+		gameMusic.setVolume(volume);
+	}
 
-//		WARNING: here it should be "gameMusic.setVolume(0.2f);"
-		gameMusic.setVolume(0);
+	public Parameters getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(Parameters parameters) {
+		this.parameters = parameters;
 	}
 
 	public Student getPlayerData() {
@@ -83,10 +96,15 @@ public class STGame extends Game {
 		this.player = player;
 	}
 
-	public void saveData(Student player) {
+	public void saveData(Parameters parameters, Student player) {
+
+		Parameters.writeParameters(parameters.getVolume(), parameters.getIsActiveAction(),
+				parameters.getDayOfAction(), parameters.isGrant(), parameters.getDayOfGrant());
+
 		Student.writeStudentData(player.getName(),
-				player.getValueOfSpecialty(), player.getSemester(), player.getCash(),
-				player.getEnergy(), player.getAttendance(), player.getTime());
+				player.getValueOfSpecialty(), player.getSemester(), player.isFlag(),
+				player.getCash(), player.getGrant(), player.getEnergy(), player.getAttendance(),
+				new long[]{player.getTime()[0], millis()});
 	}
 
 	@Override
@@ -108,6 +126,6 @@ public class STGame extends Game {
 		mSkin.dispose();
 		mAssetManager.dispose();
 
-		if (!Utils.isEmpty()) saveData(player);
+		if (!Utils.isEmpty(Constants.PLAYER)) saveData(parameters, player);
 	}
 }

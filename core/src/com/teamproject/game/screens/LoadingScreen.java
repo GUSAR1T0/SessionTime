@@ -13,9 +13,10 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Parameters;
 import com.teamproject.game.models.Student;
 
-import java.util.ArrayList;
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 /**
  * Created by Roman_Mashenkin on 11.04.2016.
@@ -29,8 +30,7 @@ public class LoadingScreen implements Screen{
     private Texture textureLogo;
     private Image imageLogo;
     private Animation animationLoading;
-
-    private ArrayList<Texture> textureLoading;
+    private Array<Texture> textureLoading;
 
     private float stateTime = 0;
 
@@ -38,7 +38,7 @@ public class LoadingScreen implements Screen{
 
         this.game = game;
 
-        //Initialization stage
+        //Initialization of stage
         stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
                 Constants.WORLD_WIDTH * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
@@ -50,7 +50,7 @@ public class LoadingScreen implements Screen{
         game.setAssetManager();
     }
 
-    public void createLoadingScreen() {
+    private void createLoadingScreen() {
 
         //Setting logo of game
         textureLogo = new Texture(Gdx.files.internal(Constants.ICON_LOGO));
@@ -61,7 +61,7 @@ public class LoadingScreen implements Screen{
                 stage.getHeight() / 2f - imageLogo.getHeight() / 2f);
 
         //Setting frames of loading in ArrayList
-        textureLoading = new ArrayList<Texture>();
+        textureLoading = new Array<Texture>();
         for (int i = 0; i < Constants.COUNT_LOADING_TEXTURES; i++) {
             Texture texture = new Texture(Gdx.files.internal(
                     "data/images/loading/loading-" + i + ".png"));
@@ -73,7 +73,7 @@ public class LoadingScreen implements Screen{
         animationLoading = Utils.getAnimation(textureLoading, Constants.COUNT_LOADING_TEXTURES, 10);
     }
 
-    public void runLoading(float delta) {
+    private void runLoading(float delta) {
 
         //Incrementing stateTime
         stateTime += delta;
@@ -125,18 +125,65 @@ public class LoadingScreen implements Screen{
             //Smoothing font and textures
             setLinearFilter();
 
-            //Start of playing background music
-            game.playMusic();
-
             //Choosing screen
-            if (Utils.isEmpty()) game.setScreen(new LoginScreen(game));
-            else {
-                game.setPlayerData(Student.readPlayerData());
+            if (Utils.isEmpty(Constants.PLAYER)) {
+                game.setParameters(new Parameters(0.5f, new boolean[]{false, false}, 0,
+                        new boolean[]{false, false}, 0));
+                game.playMusic(game.getParameters().getVolume());
+                game.setScreen(new LoginScreen(game));
+            } else {
+                game.setParameters(Parameters.readParameters());
+                game.playMusic(game.getParameters().getVolume());
+                game.setPlayerData(Student.readStudentData());
+                setEnergy(game.getPlayerData());
+                setGrant(game.getPlayerData());
                 game.setScreen(new MainMenuScreen(game));
             }
         }
         else
             runLoading(Gdx.graphics.getDeltaTime());
+    }
+
+    private void setEnergy(Student player) {
+
+        player.setEnergy(player.getEnergy() -
+                (millis() - player.getTime()[1]) / 1E3f * Constants.DECREASE_ENERGY);
+    }
+
+    private void setGrant(Student player) {
+
+        Utils.TimeData timeNow = Utils.getTimeData(millis() - player.getTime()[0]);
+        Utils.TimeData timeLast = Utils.getTimeData(player.getTime()[1] - player.getTime()[0]);
+
+        int count = 0;
+        for (int i = timeLast.days / 10 + 1; i < timeNow.days / 10; i++)
+            if (i > 0) {
+                if (((i + "").charAt((i + "").length() - 1) == '3') ||
+                        ((i + "").charAt((i + "").length() - 1) == '6') ||
+                        ((i + "").charAt((i + "").length() - 1) == '9'))
+                    count++;
+            }
+
+        if (!game.getParameters().isGrant()[0])
+            if ((((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '3') ||
+                    ((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '6') ||
+                    ((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '9')) &&
+                    (timeNow.days % 10 != '0')) {
+                if ((game.getParameters().getDayOfGrant() < timeNow.days) &&
+                        (!game.getParameters().isGrant()[1])) {
+                    game.getParameters().setGrant(new boolean[]{game.getParameters().isGrant()[0],
+                            true});
+                    game.getParameters().setDayOfGrant(timeNow.days);
+                    count++;
+                }
+            } else {
+                game.getParameters().setGrant(new boolean[]{game.getParameters().isGrant()[0],
+                        false});
+                game.getParameters().setDayOfGrant(timeNow.days);
+            }
+
+        if (player.getSemester() == (timeNow.days - 1) / 100)
+            player.setCash(player.getCash() + count * player.getGrant());
     }
 
     @Override
@@ -152,14 +199,14 @@ public class LoadingScreen implements Screen{
         //Setting background color #445565
         Utils.setBackgroundColor(242/255f, 242/255f, 242/255f, 1);
 
+        //Adding and updating loading textures on stage
+        addLoadingProcess();
+
         //Updating of graphic elements
         stage.act(delta);
 
         //Drawing actors
         stage.draw();
-
-        //Adding and updating loading textures on stage
-        addLoadingProcess();
     }
 
     @Override
