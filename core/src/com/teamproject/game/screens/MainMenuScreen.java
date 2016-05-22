@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
 
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
@@ -280,6 +281,9 @@ public class MainMenuScreen extends MenuScreen implements Screen {
     @Override
     public void resume() {
 
+        game.setPlayerData(Student.readStudentData());
+        Utils.setEnergy(game.getPlayerData());
+        Utils.setGrant(game);
     }
 
     @Override

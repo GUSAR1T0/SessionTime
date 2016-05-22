@@ -314,12 +314,15 @@ public class ExamScreen implements Screen {
 
     @Override
     public void pause() {
-
+        game.saveData(game.getParameters(), game.getPlayerData());
     }
 
     @Override
     public void resume() {
-        game.saveData(game.getParameters(), game.getPlayerData());
+
+        game.setPlayerData(Student.readStudentData());
+        Utils.setEnergy(game.getPlayerData());
+        Utils.setGrant(game);
     }
 
     @Override

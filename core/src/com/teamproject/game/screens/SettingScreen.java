@@ -171,14 +171,14 @@ public class SettingScreen implements Screen {
         //Adding elements on table
         table.add(labelSetting).colspan(2).center().expand();
         table.row();
-        table.add(labelVolume).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
-                pad(20).expandX();
-        table.add(slider).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
-                pad(20).expandX();
-        table.row();
         table.add(labelName).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
                 pad(20).expandX();
         table.add(textField).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.row();
+        table.add(labelVolume).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.add(slider).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
                 pad(20).expandX();
         table.row();
         table.add(labelNewGame).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
@@ -231,6 +231,9 @@ public class SettingScreen implements Screen {
     @Override
     public void resume() {
 
+        game.setPlayerData(Student.readStudentData());
+        Utils.setEnergy(game.getPlayerData());
+        Utils.setGrant(game);
     }
 
     @Override

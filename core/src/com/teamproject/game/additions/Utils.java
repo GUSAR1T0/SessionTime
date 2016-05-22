@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.teamproject.game.STGame;
+import com.teamproject.game.models.Parameters;
 import com.teamproject.game.models.Student;
 
 import static com.badlogic.gdx.utils.TimeUtils.millis;
@@ -191,15 +192,15 @@ public class Utils {
 
         if (isActiveAction[0] || isActiveAction[1]) {
             if (player.getEnergy() -
-                    3 * Constants.INCREASE_TIME / 1E3f * Constants.DECREASE_ENERGY > 0f)
+                    3 * Constants.INCREASE_TIME / 1E3f / Constants.DECREASE_ENERGY > 0f)
                 player.setEnergy(player.getEnergy() -
-                        3 * Constants.INCREASE_TIME / 1E3f * Constants.DECREASE_ENERGY);
+                        3 * Constants.INCREASE_TIME / 1E3f / Constants.DECREASE_ENERGY);
             else player.setEnergy(0f);
         } else {
             if (player.getEnergy() -
-                    Gdx.graphics.getDeltaTime() * 1.09f * Constants.DECREASE_ENERGY > 0f)
+                    Gdx.graphics.getDeltaTime() * 1.09f / Constants.DECREASE_ENERGY > 0f)
                 player.setEnergy(player.getEnergy() -
-                        Gdx.graphics.getDeltaTime() * 1.09f * Constants.DECREASE_ENERGY);
+                        Gdx.graphics.getDeltaTime() * 1.09f / Constants.DECREASE_ENERGY);
             else player.setEnergy(0f);
         }
     }
@@ -277,6 +278,53 @@ public class Utils {
             game.getParameters().setGrant(new boolean[]{false, game.getParameters().isGrant()[1]});
             game.getParameters().setDayOfGrant(time.days);
         }
+    }
+
+    /* This methods update information about energy of player */
+    public static void setEnergy(Student player) {
+
+        player.setEnergy(player.getEnergy() -
+                (millis() - player.getTime()[1]) / 1E3f / Constants.DECREASE_ENERGY);
+    }
+
+    /* This methods update information about grant of player */
+    public static void setGrant(STGame game) {
+
+        Student player = game.getPlayerData();
+        Parameters parameters = game.getParameters();
+
+        Utils.TimeData timeNow = Utils.getTimeData(millis() - player.getTime()[0]);
+        Utils.TimeData timeLast = Utils.getTimeData(player.getTime()[1] - player.getTime()[0]);
+
+        int count = 0;
+        for (int i = timeLast.days / 10 + 1; i < timeNow.days / 10; i++)
+            if (i > 0) {
+                if (((i + "").charAt((i + "").length() - 1) == '3') ||
+                        ((i + "").charAt((i + "").length() - 1) == '6') ||
+                        ((i + "").charAt((i + "").length() - 1) == '9'))
+                    count++;
+            }
+
+        if (!parameters.isGrant()[0])
+            if ((((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '3') ||
+                    ((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '6') ||
+                    ((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '9')) &&
+                    (timeNow.days % 10 != '0')) {
+                if ((parameters.getDayOfGrant() < timeNow.days) &&
+                        (!parameters.isGrant()[1])) {
+                    parameters.setGrant(new boolean[]{parameters.isGrant()[0],
+                            true});
+                    parameters.setDayOfGrant(timeNow.days);
+                    count++;
+                }
+            } else {
+                parameters.setGrant(new boolean[]{parameters.isGrant()[0],
+                        false});
+                parameters.setDayOfGrant(timeNow.days);
+            }
+
+        if (player.getSemester() == (timeNow.days - 1) / 100)
+            player.setCash(player.getCash() + count * player.getGrant());
     }
 
     /* This methods sets grant through result of session */

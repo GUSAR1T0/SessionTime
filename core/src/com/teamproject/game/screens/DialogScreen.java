@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
 
 import static com.badlogic.gdx.utils.TimeUtils.millis;
 
@@ -286,6 +287,9 @@ public class DialogScreen implements Screen {
     @Override
     public void resume() {
 
+        game.setPlayerData(Student.readStudentData());
+        Utils.setEnergy(game.getPlayerData());
+        Utils.setGrant(game);
     }
 
     @Override

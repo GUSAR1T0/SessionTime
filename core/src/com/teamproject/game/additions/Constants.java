@@ -26,8 +26,8 @@ public class Constants {
     public static final float RATIO = (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
 
     //The main coefficients and numbers for game
-    public static final int INCREASE_TIME = 1000000;
-    public static final float DECREASE_ENERGY = (float) 1 / 604800;
+    public static final int INCREASE_TIME = 60000;
+    public static final float DECREASE_ENERGY = 604800f;
 
     //The counts of stars in Main Menu
     public static final int COUNT_STARS_B = 8;

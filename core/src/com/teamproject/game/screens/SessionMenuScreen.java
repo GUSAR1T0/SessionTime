@@ -1,5 +1,6 @@
 package com.teamproject.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
 
 /**
  * Created by Anna on 09.05.2016.
@@ -180,6 +182,9 @@ public class SessionMenuScreen extends MenuScreen implements Screen {
     @Override
     public void resume() {
 
+        game.setPlayerData(Student.readStudentData());
+        Utils.setEnergy(game.getPlayerData());
+        Utils.setGrant(game);
     }
 
     @Override

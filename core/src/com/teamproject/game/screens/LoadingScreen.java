@@ -135,55 +135,13 @@ public class LoadingScreen implements Screen{
                 game.setParameters(Parameters.readParameters());
                 game.playMusic(game.getParameters().getVolume());
                 game.setPlayerData(Student.readStudentData());
-                setEnergy(game.getPlayerData());
-                setGrant(game.getPlayerData());
+                Utils.setEnergy(game.getPlayerData());
+                Utils.setGrant(game);
                 game.setScreen(new MainMenuScreen(game));
             }
         }
         else
             runLoading(Gdx.graphics.getDeltaTime());
-    }
-
-    private void setEnergy(Student player) {
-
-        player.setEnergy(player.getEnergy() -
-                (millis() - player.getTime()[1]) / 1E3f * Constants.DECREASE_ENERGY);
-    }
-
-    private void setGrant(Student player) {
-
-        Utils.TimeData timeNow = Utils.getTimeData(millis() - player.getTime()[0]);
-        Utils.TimeData timeLast = Utils.getTimeData(player.getTime()[1] - player.getTime()[0]);
-
-        int count = 0;
-        for (int i = timeLast.days / 10 + 1; i < timeNow.days / 10; i++)
-            if (i > 0) {
-                if (((i + "").charAt((i + "").length() - 1) == '3') ||
-                        ((i + "").charAt((i + "").length() - 1) == '6') ||
-                        ((i + "").charAt((i + "").length() - 1) == '9'))
-                    count++;
-            }
-
-        if (!game.getParameters().isGrant()[0])
-            if ((((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '3') ||
-                    ((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '6') ||
-                    ((timeNow.days / 10 + "").charAt((timeNow.days / 10 + "").length() - 1) == '9')) &&
-                    (timeNow.days % 10 != '0')) {
-                if ((game.getParameters().getDayOfGrant() < timeNow.days) &&
-                        (!game.getParameters().isGrant()[1])) {
-                    game.getParameters().setGrant(new boolean[]{game.getParameters().isGrant()[0],
-                            true});
-                    game.getParameters().setDayOfGrant(timeNow.days);
-                    count++;
-                }
-            } else {
-                game.getParameters().setGrant(new boolean[]{game.getParameters().isGrant()[0],
-                        false});
-                game.getParameters().setDayOfGrant(timeNow.days);
-            }
-
-        if (player.getSemester() == (timeNow.days - 1) / 100)
-            player.setCash(player.getCash() + count * player.getGrant());
     }
 
     @Override

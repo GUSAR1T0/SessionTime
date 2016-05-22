@@ -1,5 +1,6 @@
 package com.teamproject.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
 
 import static com.badlogic.gdx.utils.TimeUtils.millis;
 
@@ -139,11 +141,11 @@ public class GameMenuScreen extends MenuScreen implements Screen {
     public void updateEnergy() {
         super.updateEnergy();
 
-        if (buttons.get(2).isPressed()) {
+        if (buttons.get(2).isChecked()) {
             if (player.getEnergy() +
-                    Constants.INCREASE_TIME / 2E3f * Constants.DECREASE_ENERGY < 1f)
+                    Constants.INCREASE_TIME / 2E3f / Constants.DECREASE_ENERGY < 1f)
                 player.setEnergy(player.getEnergy() +
-                        Constants.INCREASE_TIME / 2E3f * Constants.DECREASE_ENERGY);
+                        Constants.INCREASE_TIME / 2E3f / Constants.DECREASE_ENERGY);
             else player.setEnergy(1f);
         }
 
@@ -154,7 +156,7 @@ public class GameMenuScreen extends MenuScreen implements Screen {
     public void updateTime() {
         super.updateTime();
 
-        if (buttons.get(2).isPressed() && !isActiveAction[0] && !isActiveAction[1]) {
+        if (buttons.get(2).isChecked() && !isActiveAction[0] && !isActiveAction[1]) {
             player.getTime()[0] -= Constants.INCREASE_TIME;
             time = Utils.getTimeData(millis() - player.getTime()[0]);
             Utils.updateTimeOnLabel(time, labelTime);
@@ -268,6 +270,9 @@ public class GameMenuScreen extends MenuScreen implements Screen {
     @Override
     public void resume() {
 
+        game.setPlayerData(Student.readStudentData());
+        Utils.setEnergy(game.getPlayerData());
+        Utils.setGrant(game);
     }
 
     @Override
