@@ -13,13 +13,16 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
+import com.teamproject.game.STGame;
+import com.teamproject.game.models.Student;
 
-import java.util.ArrayList;
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 /**
  * Created by Roman_Mashenkin on 01.04.2016.
  *
- * This class set all needful functions.
+ * This class sets all needful functions.
  */
 public class Utils {
 
@@ -31,6 +34,23 @@ public class Utils {
         public Pixmap pixmap1;
         public Pixmap pixmap2;
         public ImageTextButton.ImageTextButtonStyle style;
+    }
+
+    /* This class help to manage information about time */
+    public static class TimeData {
+
+        public int seconds;
+        public int minutes;
+        public int hours;
+        public int days;
+
+        public TimeData(int seconds, int minutes, int hours, int days) {
+
+            this.seconds = seconds;
+            this.minutes = minutes;
+            this.hours = hours;
+            this.days = days;
+        }
     }
 
     /* This method sets background color through GL-methods */
@@ -51,9 +71,9 @@ public class Utils {
     }
 
     /* This method checks file */
-    public static boolean isEmpty() {
+    public static boolean isEmpty(String path) {
 
-        FileHandle file = Gdx.files.local(Constants.PLAYER);
+        FileHandle file = Gdx.files.local(path);
 
         return file.length() == 0;
     }
@@ -106,7 +126,7 @@ public class Utils {
     }
 
     /* This method creates animation from textures ArrayList */
-    public static Animation getAnimation(ArrayList<Texture> textures, int count, int velocity) {
+    public static Animation getAnimation(Array<Texture> textures, int count, int velocity) {
 
         TextureRegion textureFrames[] = new TextureRegion[count];
 
@@ -126,15 +146,211 @@ public class Utils {
                     Texture.TextureFilter.Linear);
     }
 
-    /* This method update time on label in format HH:MM / D */
-    public static void updateTimeOnLabel(long time, Label label) {
+    /* This method gets time in format HH:MM:SS / D */
+    public static TimeData getTimeData(long time) {
 
-        int minutes = (int) (time / 1E3);
+        int seconds = (int) (time / 1E3);
+        int minutes = seconds / 60;
         int hours = minutes / 60;
         int days = hours / 24;
 
-        label.setText(Constants.DECIMAL_FORMAT.format(hours % 24) + ":" +
-                Constants.DECIMAL_FORMAT.format(minutes % 60) + "\n" +
-                days);
+        return new TimeData(seconds % 60, minutes % 60, hours % 24, days);
+    }
+
+    /* This method updates time on label in format HH:MM:SS / D */
+    public static void updateTimeOnLabel(TimeData time, Label label) {
+
+        label.setText(Constants.DF_TIME.format(time.hours) + ":" +
+                Constants.DF_TIME.format(time.minutes) + ":" +
+                Constants.DF_TIME.format(time.seconds) + "\n" +
+                time.days);
+    }
+
+    /* This method returns "TRUE" if day is included in session period */
+    public static boolean isSession(int length, int day) {
+
+        return ((length >= 2) && ((((day + "").charAt(length - 2) == '9') &&
+                (((day + "").charAt(length - 1) >= '1') &&
+                        ((day + "").charAt(length - 1) <= '9')))
+                || (((day + "").charAt(length - 2) == '0') &&
+                ((day + "").charAt(length - 1) == '0'))));
+    }
+
+    /* This method returns "TRUE" if day is *30th/*60th/*90th */
+    public static boolean isGrantDay(int length, int day) {
+
+        return ((length >= 2) &&
+                ((((day + "").charAt(length - 2) == '3') ||
+                        ((day + "").charAt(length - 2) == '6') ||
+                        ((day + "").charAt(length - 2) == '9')) &&
+                        ((day + "").charAt(length - 1) == '0')));
+    }
+
+    /* This method updates value of energy */
+    public static void updateEnergy(Student player, boolean[] isActiveAction) {
+
+        if (isActiveAction[0] || isActiveAction[1]) {
+            if (player.getEnergy() -
+                    3 * Constants.INCREASE_TIME / 1E3f * Constants.DECREASE_ENERGY > 0f)
+                player.setEnergy(player.getEnergy() -
+                        3 * Constants.INCREASE_TIME / 1E3f * Constants.DECREASE_ENERGY);
+            else player.setEnergy(0f);
+        } else {
+            if (player.getEnergy() -
+                    Gdx.graphics.getDeltaTime() * 1.09f * Constants.DECREASE_ENERGY > 0f)
+                player.setEnergy(player.getEnergy() -
+                        Gdx.graphics.getDeltaTime() * 1.09f * Constants.DECREASE_ENERGY);
+            else player.setEnergy(0f);
+        }
+    }
+
+    /* This methods updates values of time structure (no for updating labels) */
+    public static void updateTime(STGame game, boolean[] isActiveAction) {
+
+        Student player = game.getPlayerData();
+        int timer;
+
+        TimeData time = Utils.getTimeData(millis() - player.getTime()[0]);
+
+        if (isActiveAction[0] && (time.days == game.getParameters().getDayOfAction())) {
+            timer = 14 - time.hours;
+
+            if (timer > 0) {
+                player.getTime()[0] -= Constants.INCREASE_TIME;
+                time = Utils.getTimeData(millis() - player.getTime()[0]);
+            } else {
+                if (timer == 0) {
+                    time = Utils.getTimeData(millis() - player.getTime()[0]);
+                    isActiveAction[0] = false;
+                } else {
+                    isActiveAction[0] = false;
+                    game.getParameters().setDayOfAction(time.days);
+                }
+            }
+        } else isActiveAction[0] = false;
+
+        if (isActiveAction[1] && (time.days == game.getParameters().getDayOfAction())) {
+            timer = 18 - time.hours;
+
+            if (timer > 0) {
+                player.getTime()[0] -= Constants.INCREASE_TIME;
+                time = Utils.getTimeData(millis() - player.getTime()[0]);
+            } else {
+                if (timer == 0) {
+                    time = Utils.getTimeData(millis() - player.getTime()[0]);
+                    isActiveAction[1] = false;
+                } else {
+                    isActiveAction[1] = false;
+                    game.getParameters().setDayOfAction(time.days);
+                }
+            }
+        } else isActiveAction[1] = false;
+
+        if (!isActiveAction[0] && !isActiveAction[1])
+            game.getParameters().setDayOfAction(time.days);
+    }
+
+    /* This method updates value of semester */
+    public static void updateSemester(Student player, TimeData time, int[] indexOfSubject) {
+
+        if (player.isFlag() && !Utils.isSession((time.days + "").length(), time.days) &&
+                (time.days <= Constants.COUNT_AVAILABLE_SEMESTERS * 100 + 1))
+            if (player.getSemester() != time.days / 100) {
+                setGrantForResultOfSession(player, indexOfSubject);
+                player.setSemester(time.days / 100);
+            }
+    }
+
+    /* This methods updates value of cash */
+    public static void updateCash(STGame game, TimeData time) {
+
+        if (isGrantDay((time.days + "").length(), time.days)) {
+            if ((game.getParameters().getDayOfGrant() < time.days) &&
+                    (!game.getParameters().isGrant()[0])) {
+                game.getPlayerData().setCash(
+                        game.getPlayerData().getCash() + game.getPlayerData().getGrant()
+                );
+                game.getParameters().setGrant(new boolean[]{true, game.getParameters().isGrant()[1]});
+                game.getParameters().setDayOfGrant(time.days);
+            }
+        } else {
+            game.getParameters().setGrant(new boolean[]{false, game.getParameters().isGrant()[1]});
+            game.getParameters().setDayOfGrant(time.days);
+        }
+    }
+
+    /* This methods sets grant through result of session */
+    public static void setGrantForResultOfSession(Student player, int[] indexOfSubject) {
+
+        boolean[] markOfExams = new boolean[]{false, false, false, false};
+
+        for (int anIndexOfSubject : indexOfSubject) {
+
+            String path = Constants.STATISTICS +
+                    player.getSemester() + "_";
+
+            switch (anIndexOfSubject) {
+                case 0:
+                    path += Constants.SOCIOLOGY;
+                    break;
+                case 1:
+                    path += Constants.HISTORY_RU;
+                    break;
+                case 2:
+                    path += Constants.HISTORY_WORLD;
+                    break;
+                case 3:
+                    path += Constants.RUSSIAN;
+                    break;
+                case 4:
+                    path += Constants.ENGLISH;
+                    break;
+                case 5:
+                    path += Constants.ECONOMICS;
+                    break;
+                case 6:
+                    path += Constants.CULTURAL_STUDIES;
+                    break;
+                case 7:
+                    path += Constants.BIOLOGY;
+                    break;
+                case 8:
+                    path += Constants.ANATOMY;
+                    break;
+                case 9:
+                    path += Constants.LATIN;
+                    break;
+                case 10:
+                    path += Constants.LITERATURE;
+                    break;
+                case 11:
+                    path += Constants.PHILOSOPHY;
+                    break;
+                case 12:
+                    path += Constants.JURISPRUDENCE;
+                    break;
+                case 13:
+                    path += Constants.COMPUTER_SCIENCE;
+                    break;
+                case 14:
+                    path += Constants.PHYSICS;
+                    break;
+            }
+
+            FileHandle file = Gdx.files.local(path);
+            String stringStream = file.readString();
+            float mark = Float.parseFloat(stringStream);
+
+            if ((mark > 0.8f) && (mark <= 1f)) markOfExams[0] = true;
+            else if ((mark > 0.6f) && (mark <= 0.8)) markOfExams[1] = true;
+            else if ((mark > 0.4f) && (mark <= 0.6f)) markOfExams[2] = true;
+            else markOfExams[3] = true;
+        }
+
+        if (markOfExams[3]) player.setGrant(0);
+        else if (markOfExams[2]) player.setGrant(0);
+        else if (markOfExams[1] && !markOfExams[0]) player.setGrant(1500);
+        else if (markOfExams[1] && markOfExams[0]) player.setGrant(2000);
+        else if (markOfExams[0]) player.setGrant(2500);
     }
 }

@@ -17,13 +17,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
 import com.teamproject.game.models.Student;
 
-import java.util.ArrayList;
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
@@ -38,16 +39,23 @@ public class SettingScreen implements Screen {
     private BitmapFont font;
     private Table table;
 
-    private ArrayList<Utils.TextureData> textureData = new ArrayList<Utils.TextureData>();
+    private Array<Utils.TextureData> textureData = new Array<Utils.TextureData>();
+    private Student player;
+
+    private boolean[] isActiveAction;
 
     public SettingScreen(final STGame game) {
 
         this.game = game;
 
-        //Initialization stage
+        //Initialization of stage
         stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
                 Constants.WORLD_HEIGHT * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
+
+        //Getting data from files
+        isActiveAction = this.game.getParameters().getIsActiveAction();
+        player = this.game.getPlayerData();
 
         //Checking keyboard focus on Actors
         stage.getRoot().addCaptureListener(new InputListener() {
@@ -88,9 +96,6 @@ public class SettingScreen implements Screen {
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelNewGame = new Label("Начать новую игру?",
                 new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
-        // TODO: 24.04.2016 Change data of object - labelNew
-        Label labelNew = new Label("Ещё один label",
-                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
 
         //Setting slider for manage volume of background music
         final Slider slider = new Slider(0, 1, 0.01f, false, skin, "default");
@@ -100,6 +105,7 @@ public class SettingScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 music.setVolume(slider.getValue());
+                game.getParameters().setVolume(slider.getValue());
             }
         });
 
@@ -123,19 +129,10 @@ public class SettingScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
-                game.setScreen(new ConfirmScreen(game, 0));
+                game.setScreen(new DialogScreen(game, 0));
             }
         });
 
-        // TODO: 24.04.2016 Change data of object - imageTextButton
-        ImageTextButton imageTextButton = new ImageTextButton("НЕТ!", styleDel);
-        imageTextButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                dispose();
-                game.setScreen(new ConfirmScreen(game, 1));
-            }
-        });
 
         //Setting button (for going to MainMenuScreen class): textureData, index == 1
         textureData.add(Utils.getImageTextButton((int) (stage.getWidth() / 4f),
@@ -156,8 +153,10 @@ public class SettingScreen implements Screen {
                 //If text field isn't empty then ...
                 if (textField.getText().length() > 0)
                     game.setPlayerData(new Student(textField.getText(),
-                            player.getValueOfSpecialty(), player.getSemester(), player.getCash(),
-                            player.getEnergy(), player.getAttendance(), player.getTime()));
+                            player.getValueOfSpecialty(), player.getSemester(), player.isFlag(),
+                            player.getCash(), player.getGrant(), player.getEnergy(), player.getAttendance(),
+                            player.getTime())
+                    );
 
                 dispose();
                 game.setScreen(new MainMenuScreen(game));
@@ -187,11 +186,6 @@ public class SettingScreen implements Screen {
         table.add(DelPlayer).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
                 pad(20).expandX();
         table.row();
-        table.add(labelNew).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
-                pad(20).expandX();
-        table.add(imageTextButton).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
-                pad(20).expandX();
-        table.row();
         table.add(buttonOK).colspan(2).center().expand();
     }
 
@@ -210,6 +204,13 @@ public class SettingScreen implements Screen {
         //Setting background color #445565
         Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
 
+        //Updating information about time, energy, cash and semester
+        Utils.updateTime(game, isActiveAction);
+        Utils.updateEnergy(player, isActiveAction);
+        Utils.updateCash(game, Utils.getTimeData(millis() - player.getTime()[0]));
+        Utils.updateSemester(player, Utils.getTimeData(millis() - player.getTime()[0]),
+                game.indexOfSubject);
+
         //Updating of graphic elements
         stage.act(delta);
 
@@ -224,7 +225,7 @@ public class SettingScreen implements Screen {
 
     @Override
     public void pause() {
-        game.saveData(game.getPlayerData());
+        game.saveData(game.getParameters(), game.getPlayerData());
     }
 
     @Override

@@ -1,14 +1,10 @@
 package com.teamproject.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,54 +12,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.Array;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
-import com.teamproject.game.models.Student;
-
-import static com.badlogic.gdx.utils.TimeUtils.millis;
-
-import java.util.ArrayList;
 
 /**
  * Created by Roman_Mashenkin on 26.03.2016.
  *
  * This class is main menu view of game.
  */
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends MenuScreen implements Screen {
 
-    private STGame game;
-    private Stage stage;
-    private BitmapFont fontData;
-    private BitmapFont fontButton;
-    private Label labelTime;
-    private Pixmap pixmapTableBackground;
-    private TextureRegionDrawable textureTableBackground;
-    private ArrayList<Table> playerTable = new ArrayList<Table>();
+    private Array<Table> playerTable;
     private ScrollPane scrollPlayerTable;
-    private Table buttonTable;
-
-    private Utils.TextureData textureData;
 
     public MainMenuScreen(final STGame game) {
-
-        this.game = game;
-
-        //Initialization stage
-        stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
-                Constants.WORLD_WIDTH * Constants.RATIO));
-        Gdx.input.setInputProcessor(stage);
-
-        //Creating and adding elements
-        createDataScreen();
-        createButtonScreen();
+        super(game);
     }
 
-    private void createDataScreen() {
-
-        //Getting player data
-        Student player = game.getPlayerData();
+    @Override
+    public void createDataTable() {
 
         //Getting font for labels
         fontData = Utils.getFont("BebasNeue.otf", 46);
@@ -76,16 +45,20 @@ public class MainMenuScreen implements Screen {
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
         //Adding icons of light-gray and dark-gray stars
-        ArrayList<Image> iconStar = new ArrayList<Image>();
-        for (int i = 0; i < player.getSemester(); i++) {
+        Array<Image> iconStar = new Array<Image>();
+        for (int i = 0; i < player.getSemester(); i++)
             iconStar.add(new Image(game.getManager().get(Constants.LIGHTGRAY_STAR, Texture.class)));
-        }
-        for (int i = 0; i < Constants.COUNT_STARS_B - player.getSemester(); i++) {
+
+        for (int i = player.getSemester(); i < Constants.COUNT_AVAILABLE_SEMESTERS; i++)
+            iconStar.add(new Image(game.getManager().get(Constants.BLUE_STAR, Texture.class)));
+
+        for (int i = Constants.COUNT_AVAILABLE_SEMESTERS; i < Constants.COUNT_STARS_B; i++)
             iconStar.add(new Image(game.getManager().get(Constants.DARKGRAY_STAR, Texture.class)));
-        }
 
         //Adding icon of PLAYER
         Image iconPlayer = new Image(game.getManager().get(Constants.ICON_CAT, Texture.class));
+
+        playerTable = new Array<Table>();
 
         //Setting table for general data of PLAYER
         Table infoTable = new Table();
@@ -94,8 +67,7 @@ public class MainMenuScreen implements Screen {
 
         for (int i = 0; i < Constants.COUNT_STARS_B; i++) {
             infoTable.add(iconStar.get(i)).width(6 / 150f * stage.getWidth()).
-                    height(6 / 150f * stage.getWidth()).
-                    padLeft(2).padRight(2).expand();
+                    height(6 / 150f * stage.getWidth()).expand();
         }
         infoTable.row();
         infoTable.add(iconPlayer).width(3 / 16f * stage.getWidth()).
@@ -114,10 +86,9 @@ public class MainMenuScreen implements Screen {
         Image iconTime = new Image(game.getManager().get(Constants.ICON_TIME, Texture.class));
 
         //Adding labels for show information about cash and energy
-        Label labelCash = new Label(player.getCash() + "",
+        labelCash = new Label(player.getCash() + "",
                 new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
-        Label labelEnergy = new Label(player.getEnergy() + "%",
-                new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
+        labelEnergy = new Label("", new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
         labelTime = new Label("", new Label.LabelStyle(fontData, Color.valueOf("#F2F2F2")));
 
         //Setting table for resources data of PLAYER
@@ -165,27 +136,19 @@ public class MainMenuScreen implements Screen {
 
         //Setting parameters of scrolling
         scrollPlayerTable.setOverscroll(false, false);
-        scrollPlayerTable.setupFadeScrollBars(0, 0);
     }
 
-    private void createButtonScreen() {
-
-        //Getting font for text on buttons
-        fontButton = Utils.getFont("BebasNeue.otf", 58);
-        Utils.setLinearFilter(fontButton);
-
-        //Creating style for ImageTextButton
-        textureData = Utils.getImageTextButton((int) (stage.getWidth() / 2),
-                (int) (stage.getHeight() * 7 / 40),
-                "#F2F2F2", "#666666",
-                "#445565", "#F2F2F2",
-                fontButton);
+    @Override
+    public void createButtonTable() {
 
         //Creating ImageTextButtons
-        ImageTextButton.ImageTextButtonStyle style = textureData.style;
+        ImageTextButton.ImageTextButtonStyle style = textureData.get(0).style;
 
-        ImageTextButton playButton = new ImageTextButton("Играть", style);
-        playButton.addListener(new ChangeListener() {
+        buttons = new Array<ImageTextButton>();
+        buttons.add(new ImageTextButton("Играть", style));
+        buttons.add(new ImageTextButton("Настройки", style));
+
+        buttons.get(0).addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
@@ -193,14 +156,7 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        ImageTextButton statisticsButton = new ImageTextButton("Статистика", style);
-        // TODO: 11.04.2016 to add listener for statisticsButton
-
-        ImageTextButton helpButton = new ImageTextButton("Помощь", style);
-        // TODO: 11.04.2016 to add listener for helpButton
-
-        ImageTextButton settingsButton = new ImageTextButton("Настройки", style);
-        settingsButton.addListener(new ChangeListener() {
+        buttons.get(1).addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 dispose();
@@ -215,13 +171,24 @@ public class MainMenuScreen implements Screen {
         buttonTable.setWidth(stage.getWidth() * 5 / 8f);
         buttonTable.setHeight(stage.getHeight());
 
-        buttonTable.add(playButton).expand();
+        buttonTable.add(buttons.get(0)).expand();
         buttonTable.row();
-        buttonTable.add(statisticsButton).expand();
-        buttonTable.row();
-        buttonTable.add(helpButton).expand();
-        buttonTable.row();
-        buttonTable.add(settingsButton).expand();
+        buttonTable.add(buttons.get(1)).expand();
+    }
+
+    @Override
+    public void setButtonStyles() {
+
+        //Getting font for text on buttons
+        fontButton = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(fontButton);
+
+        //Creating style for ImageTextButton
+        textureData.add(Utils.getImageTextButton((int) (stage.getWidth() / 2),
+                (int) (stage.getHeight() * 7 / 40),
+                "#F2F2F2", "#666666",
+                "#445565", "#F2F2F2",
+                fontButton));
     }
 
     private void addScrollAction() {
@@ -247,11 +214,29 @@ public class MainMenuScreen implements Screen {
     }
 
     @Override
-    public void show() {
+    public void updateSemester() {
+
+        if (player.isFlag() && !Utils.isSession((time.days + "").length(), time.days) &&
+                (time.days <= Constants.COUNT_AVAILABLE_SEMESTERS * 100 + 1))
+            player.setSemester(time.days / 100);
+    }
+
+    @Override
+    public void setDisabled(int i) {}
+
+    @Override
+    public void setIncluded(int i) {}
+
+    @Override
+    public void addActors() {
 
         //Adding actor (table) on stage
         stage.addActor(scrollPlayerTable);
         stage.addActor(buttonTable);
+    }
+
+    @Override
+    public void show() {
 
         //Debugging all position of stage elements
 //        stage.setDebugAll(true);
@@ -263,17 +248,23 @@ public class MainMenuScreen implements Screen {
         //Setting background color #445565
         Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
 
+        //Offset control of table with scroll
+        addScrollAction();
+
+        //Updating information about energy, time, semester
+        updateTime();
+        updateEnergy();
+        updateCash();
+        updateSemester();
+
+        //Checking value of energy
+        checkOnGameOver();
+
         //Updating of graphic elements
         stage.act(delta);
 
         //Drawing actors
         stage.draw();
-
-        //Offset control of table with scroll
-        addScrollAction();
-
-        //Updating time
-        Utils.updateTimeOnLabel(millis() - game.getPlayerData().getTime(), labelTime);
     }
 
     @Override
@@ -283,7 +274,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void pause() {
-        game.saveData(game.getPlayerData());
+        game.saveData(game.getParameters(), player);
     }
 
     @Override
@@ -304,9 +295,9 @@ public class MainMenuScreen implements Screen {
         fontButton.dispose();
         pixmapTableBackground.dispose();
         textureTableBackground.getRegion().getTexture().dispose();
-        textureData.texture1.getRegion().getTexture().dispose();
-        textureData.texture2.getRegion().getTexture().dispose();
-        textureData.pixmap1.dispose();
-        textureData.pixmap2.dispose();
+        textureData.get(0).texture1.getRegion().getTexture().dispose();
+        textureData.get(0).texture2.getRegion().getTexture().dispose();
+        textureData.get(0).pixmap1.dispose();
+        textureData.get(0).pixmap2.dispose();
     }
 }

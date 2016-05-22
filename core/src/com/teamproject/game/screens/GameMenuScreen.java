@@ -1,104 +1,223 @@
 package com.teamproject.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
-import com.teamproject.game.models.Student;
 
 import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
+ *
+ * This class views game menu: buttons for doing game process and state of player.
  */
-public class GameMenuScreen implements Screen {
-    // TODO: 11.04.2016 to make new realization GameMenuScreen using new design
-
-    private STGame game;
-    private Stage stage;
-    private BitmapFont font;
-    private BitmapFont fontTime;
-    private Label labelTime;
-    private Table resourcesTable;
-    private Pixmap pixmapTableBackground;
-    private TextureRegionDrawable textureTableBackground;
+public class GameMenuScreen extends MenuScreen implements Screen {
 
     public GameMenuScreen(final STGame game) {
-
-        this.game = game;
-
-        stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
-                Constants.WORLD_WIDTH * Constants.RATIO));
-        Gdx.input.setInputProcessor(stage);
-
-        //Adding elements
-        createGameMenuScreen();
+        super(game);
     }
 
-    public void createGameMenuScreen() {
+    @Override
+    public void createButtonTable() {
 
-        //Getting player data
-        Student player = game.getPlayerData();
+        //Creating buttons and adding listeners its
+        buttons = new Array<ImageTextButton>();
 
-        //Getting fonts for labels
-        font = Utils.getFont("BebasNeue.otf", 54);
-        Utils.setLinearFilter(font);
-        fontTime = Utils.getFont("BebasNeue.otf", 36);
-        Utils.setLinearFilter(fontTime);
+        buttons.add(new ImageTextButton("Учёба/Сессия", textureData.get(0).style));
+        buttons.add(new ImageTextButton("Работа", textureData.get(0).style));
+        buttons.add(new ImageTextButton("Отдых", textureData.get(0).style));
+        buttons.add(new ImageTextButton("Перекусить", textureData.get(0).style));
+        buttons.add(new ImageTextButton("Развлечения", textureData.get(0).style));
+        buttons.add(new ImageTextButton("Вернуться в главное меню", textureData.get(1).style));
 
-        //Adding icon of CASH and ENERGY
-        Image iconCoin = new Image(game.getManager().get(Constants.ICON_COIN, Texture.class));
-        Image iconEnergy = new Image(game.getManager().get(Constants.ICON_ENERGY, Texture.class));
-        Image iconTime = new Image(game.getManager().get(Constants.ICON_TIME, Texture.class));
+        buttons.get(0).addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (Utils.isSession((time.days + "").length(), time.days)) {
+                    dispose();
+                    game.setScreen(new SessionMenuScreen(game));
+                } else if (!isActiveAction[0] && !isActiveAction[1]) {
+                    int[] attendance = new int[2];
+                    attendance[0] = player.getAttendance()[0] + 1;
+                    attendance[1] = player.getAttendance()[1];
+                    player.setAttendance(attendance);
 
-        //Adding labels for show information about cash and energy
-        Label labelCoin = new Label(player.getCash() + "",
-                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
-        Label labelEnergy = new Label(player.getEnergy() + "%",
-                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
-        labelTime = new Label("",
-                new Label.LabelStyle(fontTime, Color.valueOf("#F2F2F2")));
+                    isActiveAction[0] = true;
+                    timer = 14 - time.hours;
+                }
+            }
+        });
 
-        //Setting background of information tables
-        pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
-        textureTableBackground = new TextureRegionDrawable(new TextureRegion(
-                new Texture(pixmapTableBackground)));
+        buttons.get(1).addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
 
-        //Setting table for resources data of PLAYER
-        resourcesTable = new Table();
-        resourcesTable.setWidth(stage.getWidth());
-        resourcesTable.setHeight(stage.getHeight() * 1 / 8f);
-        resourcesTable.setPosition(0, stage.getHeight() * 7 / 8f);
-        resourcesTable.setBackground(textureTableBackground);
+                if (!isActiveAction[1] && !isActiveAction[0]) {
+                    int[] attendance = new int[2];
+                    attendance[0] = player.getAttendance()[0];
+                    attendance[1] = player.getAttendance()[1] + 1;
+                    player.setAttendance(attendance);
 
-        resourcesTable.add(iconCoin).width(stage.getWidth() * 1 / 18f).
-                height(stage.getWidth() * 1 / 18f).expand();
-        resourcesTable.add(labelCoin).expand();
-        resourcesTable.add(iconEnergy).width(stage.getWidth() * 1 / 12f).
-                height(stage.getWidth() * 1 / 22f).expand();
-        resourcesTable.add(labelEnergy).expand();
-        resourcesTable.add(iconTime).width(1 / 18f * stage.getWidth()).
-                height(1 / 18f * stage.getWidth()).expand();
-        resourcesTable.add(labelTime).width(1 / 18f * stage.getWidth()).expand();
+                    isActiveAction[1] = true;
+                    timer = 18 - time.hours;
+
+                    if (player.getAttendance()[1] % 15 == 0) {
+                        player.setCash(player.getCash() + salary);
+                        labelCash.setText(player.getCash() + "");
+                    }
+                }
+            }
+        });
+
+        buttons.get(3).addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (player.getCash() > 0) {
+                    player.setCash(player.getCash() - 100);
+                    labelCash.setText(player.getCash() + "");
+
+                    if (player.getEnergy() < 0.9f)
+                        player.setEnergy(player.getEnergy() + 0.1f);
+                    else if (player.getEnergy() < 1f)
+                        player.setEnergy(1f);
+
+                    labelEnergy.setText(player.getEnergy() + "");
+                }
+            }
+        });
+
+        buttons.get(4).addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (player.getCash() > 0) {
+                    player.setCash(player.getCash() - 300);
+                    labelCash.setText(player.getCash() + "");
+
+                    if (player.getEnergy() < 0.75f)
+                        player.setEnergy(player.getEnergy() + 0.25f);
+                    else if (player.getEnergy() < 1f)
+                        player.setEnergy(1f);
+
+                    labelEnergy.setText(player.getEnergy() + "");
+                }
+            }
+        });
+
+        buttons.get(5).addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                dispose();
+                game.setScreen(new MainMenuScreen(game));
+            }
+        });
+
+        //Setting table for button of MENU
+        buttonTable = new Table();
+        buttonTable.setWidth(stage.getWidth());
+        buttonTable.setHeight(stage.getHeight() * 7 / 8f);
+
+        buttonTable.add(buttons.get(0)).padLeft(25).padRight(25).expand();
+        buttonTable.add(buttons.get(1)).padLeft(25).padRight(25).expand();
+        buttonTable.add(buttons.get(2)).padLeft(25).padRight(25).expand();
+        buttonTable.add(buttons.get(3)).padLeft(25).padRight(25).expand();
+        buttonTable.add(buttons.get(4)).padLeft(25).padRight(25).expand();
+        buttonTable.add(buttons.get(5)).padLeft(25).padRight(25).expand();
+
+        buttonScrollPane = new ScrollPane(buttonTable);
+        buttonScrollPane.setWidth(stage.getWidth());
+        buttonScrollPane.setHeight(stage.getHeight() * 7 / 8f);
+    }
+
+    @Override
+    public void updateEnergy() {
+        super.updateEnergy();
+
+        if (buttons.get(2).isPressed()) {
+            if (player.getEnergy() +
+                    Constants.INCREASE_TIME / 2E3f * Constants.DECREASE_ENERGY < 1f)
+                player.setEnergy(player.getEnergy() +
+                        Constants.INCREASE_TIME / 2E3f * Constants.DECREASE_ENERGY);
+            else player.setEnergy(1f);
+        }
+
+        labelEnergy.setText(Constants.DF_PERCENT.format(player.getEnergy()));
+    }
+
+    @Override
+    public void updateTime() {
+        super.updateTime();
+
+        if (buttons.get(2).isPressed() && !isActiveAction[0] && !isActiveAction[1]) {
+            player.getTime()[0] -= Constants.INCREASE_TIME;
+            time = Utils.getTimeData(millis() - player.getTime()[0]);
+            Utils.updateTimeOnLabel(time, labelTime);
+        }
+    }
+
+    @Override
+    public void setDisabled(int i) {}
+
+    @Override
+    public void setIncluded(int i) {}
+
+    public void manageButtons() {
+
+        //Managing button "Учёба/Сессия"
+        if ((player.getSemester() < Constants.COUNT_AVAILABLE_SEMESTERS) &&
+                ((time.hours >= 8) && (time.hours < 14) && !isActiveAction[0])) {
+            buttons.get(0).getColor().a = 1f;
+            buttons.get(0).setDisabled(false);
+        } else {
+            buttons.get(0).getColor().a = 0.5f;
+            buttons.get(0).setDisabled(true);
+        }
+
+        //Managing button "Работа"
+        if ((time.hours >= 10) && (time.hours < 18) && !isActiveAction[1]) {
+            buttons.get(1).getColor().a = 1f;
+            buttons.get(1).setDisabled(false);
+        } else {
+            buttons.get(1).getColor().a = 0.5f;
+            buttons.get(1).setDisabled(true);
+        }
+
+        if (player.getCash() - 100 > 0) {
+            buttons.get(3).getColor().a = 1f;
+            buttons.get(3).setDisabled(false);
+        } else {
+            buttons.get(3).getColor().a = 0.5f;
+            buttons.get(3).setDisabled(true);
+        }
+
+        if (player.getCash() - 300 > 0) {
+            buttons.get(4).getColor().a = 1f;
+            buttons.get(4).setDisabled(false);
+        } else {
+            buttons.get(4).getColor().a = 0.5f;
+            buttons.get(4).setDisabled(true);
+        }
+    }
+
+    public void setTextOfEducation() {
+
+        if (time.days < Constants.COUNT_AVAILABLE_SEMESTERS * 100 + 1) {
+            if (Utils.isSession((time.days + "").length(), time.days))
+                buttons.get(0).setText("Сессия");
+            else
+                buttons.get(0).setText("Учёба");
+        } else
+            buttons.get(0).setText("  Следующие этапы игры на стадии разработки  ");
     }
 
     @Override
     public void show() {
-
-        //Adding actor (table) on stage
-        stage.addActor(resourcesTable);
 
         //Debugging all position of stage elements
 //        stage.setDebugAll(true);
@@ -107,17 +226,33 @@ public class GameMenuScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        //Setting background color #445565
-        Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
+        //Setting background color #F2F2F2
+        Utils.setBackgroundColor(242/255f, 242/255f, 242/255f, 1);
+
+        //Updating information about time, energy, cash and semester
+        updateTime();
+        updateEnergy();
+        updateCash();
+        updateSemester();
+
+        //Setting of subject sets and check result of session
+        setIndexesOfSubject();
+        checkResults(game.indexOfSubject);
+
+        //Checking value of energy
+        checkOnGameOver();
+
+        //Controlling buttons for click
+        manageButtons();
+
+        //Setting text on button "Учёба/Сессия"
+        setTextOfEducation();
 
         //Updating of graphic elements
         stage.act(delta);
 
         //Drawing actors
         stage.draw();
-
-        //Updating time
-        Utils.updateTimeOnLabel(millis() - game.getPlayerData().getTime(), labelTime);
     }
 
     @Override
@@ -127,7 +262,7 @@ public class GameMenuScreen implements Screen {
 
     @Override
     public void pause() {
-        game.saveData(game.getPlayerData());
+        game.saveData(game.getParameters(), player);
     }
 
     @Override
@@ -144,9 +279,17 @@ public class GameMenuScreen implements Screen {
     public void dispose() {
 
         stage.dispose();
-        font.dispose();
+        fontData.dispose();
         fontTime.dispose();
+        fontButton.dispose();
         pixmapTableBackground.dispose();
         textureTableBackground.getRegion().getTexture().dispose();
+
+        for (int i = 0; i < 2; i++) {
+            textureData.get(i).texture1.getRegion().getTexture().dispose();
+            textureData.get(i).texture2.getRegion().getTexture().dispose();
+            textureData.get(i).pixmap1.dispose();
+            textureData.get(i).pixmap2.dispose();
+        }
     }
 }

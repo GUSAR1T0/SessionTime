@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Parameters;
 import com.teamproject.game.models.Student;
 
 import static com.badlogic.gdx.utils.TimeUtils.millis;
@@ -42,7 +43,7 @@ public class LoginScreen implements Screen {
 
         this.game = game;
 
-        //Initialization stage
+        //Initialization of stage
         stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
                 Constants.WORLD_WIDTH * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
@@ -90,9 +91,9 @@ public class LoginScreen implements Screen {
         //Setting select box
         final SelectBox<String> selectBox = new SelectBox<String>(skin, "default");
 
-        String[] specList = new String[Student.getSpecList().size()];
+        String[] specList = new String[Student.getSpecList().size];
 
-        for (int i = 0; i < Student.getSpecList().size(); i++)
+        for (int i = 0; i < Student.getSpecList().size; i++)
             specList[i] = " " + Student.getSpecList().get(i);
 
         selectBox.setItems(specList);
@@ -115,7 +116,11 @@ public class LoginScreen implements Screen {
                 //If text field isn't empty then ...
                 if (textField.getText().length() > 0) {
                     game.setPlayerData(new Student(textField.getText(), selectBox.getSelectedIndex(),
-                            0, 1000, 100, 0, millis()));
+                            0, true, 3000, 1500, 1, new int[]{0, 0}, new long[]{millis(), millis()}));
+
+                    game.setParameters(new Parameters(game.getParameters().getVolume(),
+                            new boolean[]{false, false}, 0, new boolean[]{false, false}, 0));
+
                     dispose();
                     game.setScreen(new MainMenuScreen(game));
                 }
