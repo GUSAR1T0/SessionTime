@@ -2,84 +2,122 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
+import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
+
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 /**
  * Created by Roman_Mashenkin on 28.03.2016.
  */
 public class GameMenuScreen implements Screen {
-    // TODO: 02.04.2016, make realization main idea of game or menu of mini-games
+    // TODO: 11.04.2016 to make new realization GameMenuScreen using new design
 
-    private OrthographicCamera camera;
-    private Stage stage;
-    private Texture background;
     private STGame game;
+    private Stage stage;
+    private BitmapFont font;
+    private BitmapFont fontTime;
+    private Label labelTime;
+    private Table resourcesTable;
+    private Pixmap pixmapTableBackground;
+    private TextureRegionDrawable textureTableBackground;
 
-    public GameMenuScreen(STGame game) {
+    public GameMenuScreen(final STGame game) {
 
         this.game = game;
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false);
-
-        stage = new Stage();
+        stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
+                Constants.WORLD_WIDTH * Constants.RATIO));
         Gdx.input.setInputProcessor(stage);
 
-        background = new Texture(Gdx.files.internal(Constants.MENU_BACKGROUND));
-
-        readPersonData();
+        //Adding elements
+        createGameMenuScreen();
     }
 
-    public void readPersonData() {
+    public void createGameMenuScreen() {
 
-        FileHandle file = Gdx.files.local(Constants.PERSON);
-        String tmpString = file.readString();
+        //Getting player data
+        Student player = game.getPlayerData();
 
-        String name = "";
-        int specialty, i = 0;
+        //Getting fonts for labels
+        font = Utils.getFont("BebasNeue.otf", 54);
+        Utils.setLinearFilter(font);
+        fontTime = Utils.getFont("BebasNeue.otf", 36);
+        Utils.setLinearFilter(fontTime);
 
-        while (true) {
-            if (tmpString.charAt(i) != '\n') {
-                name += tmpString.charAt(i++);
-            } else break;
-        }
+        //Adding icon of CASH and ENERGY
+        Image iconCoin = new Image(game.getManager().get(Constants.ICON_COIN, Texture.class));
+        Image iconEnergy = new Image(game.getManager().get(Constants.ICON_ENERGY, Texture.class));
+        Image iconTime = new Image(game.getManager().get(Constants.ICON_TIME, Texture.class));
 
-        i++;
-        String tmp = "";
+        //Adding labels for show information about cash and energy
+        Label labelCoin = new Label(player.getCash() + "",
+                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
+        Label labelEnergy = new Label(player.getEnergy() + "%",
+                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
+        labelTime = new Label("",
+                new Label.LabelStyle(fontTime, Color.valueOf("#F2F2F2")));
 
-        while (true) {
-            if (tmpString.length() != i) {
-                tmp += tmpString.charAt(i++);
-            } else break;
-        }
+        //Setting background of information tables
+        pixmapTableBackground = Utils.setPixmapColor(1, 1, "#CC4B4B");
+        textureTableBackground = new TextureRegionDrawable(new TextureRegion(
+                new Texture(pixmapTableBackground)));
 
-        specialty = Integer.parseInt(tmp);
+        //Setting table for resources data of PLAYER
+        resourcesTable = new Table();
+        resourcesTable.setWidth(stage.getWidth());
+        resourcesTable.setHeight(stage.getHeight() * 1 / 8f);
+        resourcesTable.setPosition(0, stage.getHeight() * 7 / 8f);
+        resourcesTable.setBackground(textureTableBackground);
 
-        //Debugging values of name & specialty
-        //P.S. Truly value of length of "name" equals name.length() - 1
-//        Gdx.app.log("NAME", name);
-//        Gdx.app.log("SPECIALTY", specialty + "");
+        resourcesTable.add(iconCoin).width(stage.getWidth() * 1 / 18f).
+                height(stage.getWidth() * 1 / 18f).expand();
+        resourcesTable.add(labelCoin).expand();
+        resourcesTable.add(iconEnergy).width(stage.getWidth() * 1 / 12f).
+                height(stage.getWidth() * 1 / 22f).expand();
+        resourcesTable.add(labelEnergy).expand();
+        resourcesTable.add(iconTime).width(1 / 18f * stage.getWidth()).
+                height(1 / 18f * stage.getWidth()).expand();
+        resourcesTable.add(labelTime).width(1 / 18f * stage.getWidth()).expand();
     }
 
     @Override
     public void show() {
 
+        //Adding actor (table) on stage
+        stage.addActor(resourcesTable);
+
+        //Debugging all position of stage elements
+//        stage.setDebugAll(true);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.5f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        stage.getBatch().begin();
-        stage.getBatch().draw(background, 0, 0);
-        stage.getBatch().end();
+        //Setting background color #445565
+        Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
+
+        //Updating of graphic elements
+        stage.act(delta);
+
+        //Drawing actors
+        stage.draw();
+
+        //Updating time
+        Utils.updateTimeOnLabel(millis() - game.getPlayerData().getTime(), labelTime);
     }
 
     @Override
@@ -89,7 +127,7 @@ public class GameMenuScreen implements Screen {
 
     @Override
     public void pause() {
-
+        game.saveData(game.getPlayerData());
     }
 
     @Override
@@ -105,5 +143,10 @@ public class GameMenuScreen implements Screen {
     @Override
     public void dispose() {
 
+        stage.dispose();
+        font.dispose();
+        fontTime.dispose();
+        pixmapTableBackground.dispose();
+        textureTableBackground.getRegion().getTexture().dispose();
     }
 }

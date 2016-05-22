@@ -5,23 +5,45 @@ filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 1, 43
+  xy: 1, 1
   size: 50, 50
-  split: 10, 10, 10, 10
+  split: 20, 20, 20, 20
   orig: 50, 50
+  offset: 0, 0
+  index: -1
+bar_knob
+  rotate: false
+  xy: 53, 14
+  size: 37, 37
+  orig: 37, 37
+  offset: 0, 0
+  index: -1
+scroll_knob
+  rotate: false
+  xy: 92, 13
+  size: 4, 38
+  orig: 4, 38
   offset: 0, 0
   index: -1
 cursor
   rotate: false
-  xy: 53, 1
-  size: 4, 92
-  orig: 4, 92
+  xy: 98, 13
+  size: 2, 38
+  orig: 2, 38
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 59, 1
-  size: 4, 92
-  orig: 4, 92
+  xy: 102, 13
+  size: 2, 38
+  orig: 2, 38
+  offset: 0, 0
+  index: -1
+bar_background
+  rotate: false
+  xy: 106, 34
+  size: 17, 17
+  split: 8, 8, 8, 8
+  orig: 17, 17
   offset: 0, 0
   index: -1

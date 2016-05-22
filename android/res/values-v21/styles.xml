@@ -8,8 +8,8 @@
                 <item name="android:windowNoTitle">true</item>
                 <item name="android:windowContentOverlay">@null</item>
                 <item name="android:windowFullscreen">true</item>
-                <item name="android:colorPrimary">#3F51B5</item>
-                <item name="android:colorPrimaryDark">#303F9F</item>
-                <item name="android:colorAccent">#FF4081</item>
+                <item name="android:colorPrimary">#445565</item>
+                <item name="android:colorPrimaryDark">#666666</item>
+                <item name="android:colorAccent">#CC4B4B</item>
         </style>
 </resources>

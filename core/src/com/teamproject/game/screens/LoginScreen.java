@@ -2,15 +2,13 @@ package com.teamproject.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -22,31 +20,27 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.teamproject.game.STGame;
 import com.teamproject.game.additions.Constants;
 import com.teamproject.game.additions.Utils;
+import com.teamproject.game.models.Student;
+
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 /**
  * Created by Roman_Mashenkin on 29.03.2016.
  *
- * This class is authorization view.
- * The main operations:
- * - setting stage;
- * - creating table with labels, text field and select box;
- * - adding button "OK" on stage;
- * - drawing background and actors.
+ * This class shows general fields for filling information about player.
  */
 public class LoginScreen implements Screen {
 
     private STGame game;
     private Stage stage;
+    private BitmapFont font;
     private Table table;
-    private ImageButton okButton;
 
-    public LoginScreen(STGame game) {
+    private Utils.TextureData textureData;
+
+    public LoginScreen(final STGame game) {
 
         this.game = game;
-
-        //Clear screen and color red
-        Gdx.gl.glClearColor(0.5f, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         //Initialization stage
         stage = new Stage(new StretchViewport(Constants.WORLD_WIDTH,
@@ -56,8 +50,10 @@ public class LoginScreen implements Screen {
         //Checking keyboard focus on Actors
         stage.getRoot().addCaptureListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                if (!(event.getTarget() instanceof TextField))
+                if (!(event.getTarget() instanceof TextField)) {
                     stage.setKeyboardFocus(null);
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                }
                 return false;
             }
         });
@@ -66,71 +62,92 @@ public class LoginScreen implements Screen {
         createLoginScreen();
     }
 
-    private void writePersonData(String name, int specialty) {
-        //Writing entering and choosing data of fields in file
-        FileHandle file = Gdx.files.local(Constants.PERSON);
-        file.writeString(name + "\n" + specialty, false);
-    }
-
     private void createLoginScreen() {
+
+        //Getting skin for UIs
         Skin skin = game.getSkin();
 
         //Getting font for labels
-        BitmapFont font = Utils.getFont("Bebas_Neue.otf", 76);
+        font = Utils.getFont("BebasNeue.otf", 58);
+        Utils.setLinearFilter(font);
 
         //Setting labels
-        Label labelEnterData = new Label("Введите данные",
-                new Label.LabelStyle(font, Color.valueOf("#FFF971")));
-        Label labelName = new Label("Имя:", new Label.LabelStyle(font, Color.valueOf("#FFF971")));
+        Label labelWelcome = new Label("Привет, студент!\n" +
+                "Создай новый профиль для входа в игру",
+                new Label.LabelStyle(font,  Color.valueOf("#F2F2F2")));
+        labelWelcome.setAlignment(Align.center);
+
+        Label labelName = new Label("Имя:", new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
         Label labelSpecialty = new Label("Специальность:",
-                new Label.LabelStyle(font, Color.valueOf("#FFF971")));
+                new Label.LabelStyle(font, Color.valueOf("#F2F2F2")));
 
         //Setting text field
         final TextField textField = new TextField("", skin, "default");
-        textField.setMaxLength(14);
+        textField.setMaxLength(20);
         textField.setAlignment(Align.center);
         textField.setMessageText("Введите Ваше имя");
-        textField.setColor(skin.getColor("white"));
 
         //Setting select box
         final SelectBox<String> selectBox = new SelectBox<String>(skin, "default");
-        selectBox.setItems(" Техническая", " Гуманитарная");
 
-        //Setting table for entering and choosing
-        table = new Table();
-        table.setFillParent(true);
+        String[] specList = new String[Student.getSpecList().size()];
 
-        //Adding elements on table
-        table.add(labelEnterData).colspan(2).center().padBottom(30);
-        table.row();
-        table.add(labelName).center();
-        table.add(textField).pad(30).width(4 * stage.getWidth() / 9);
-        table.row();
-        table.add(labelSpecialty).center();
-        table.add(selectBox).pad(30).width(4 * stage.getWidth() / 9);
+        for (int i = 0; i < Student.getSpecList().size(); i++)
+            specList[i] = " " + Student.getSpecList().get(i);
 
-        //Setting button (for going to GameMenuScreen class)
-        okButton = Utils.makeButton("OK_button");
-        okButton.setSize(okButton.getWidth() / 2, okButton.getHeight() / 2);
-        okButton.setPosition(stage.getWidth() - okButton.getWidth() - 30,
-                stage.getHeight() / 5 - okButton.getHeight());
-        okButton.addListener(new ChangeListener() {
+        selectBox.setItems(specList);
+
+        //Setting button (for going to MainMenuScreen class)
+        textureData = Utils.getImageTextButton((int) (stage.getWidth() / 4f),
+                (int) (stage.getHeight() / 9f),
+                "#76A790", "#666666",
+                "#F2F2F2", "#F2F2F2",
+                font);
+
+        ImageTextButton.ImageTextButtonStyle style = textureData.style;
+
+        ImageTextButton buttonOK = new ImageTextButton("OK", style);
+        buttonOK.setPosition(stage.getWidth() - buttonOK.getWidth() - 30,
+                stage.getHeight() / 5f - buttonOK.getHeight() - 10);
+        buttonOK.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //If text field isn't empty then ...
                 if (textField.getText().length() > 0) {
-                    writePersonData(textField.getText(), selectBox.getSelectedIndex());
-                    game.setScreen(new GameMenuScreen(game));
+                    game.setPlayerData(new Student(textField.getText(), selectBox.getSelectedIndex(),
+                            0, 1000, 100, 0, millis()));
+                    dispose();
+                    game.setScreen(new MainMenuScreen(game));
                 }
             }
         });
+
+        //Setting table for entering and choosing
+        table = new Table();
+
+        table.setFillParent(true);
+
+        //Adding elements on table
+        table.add(labelWelcome).colspan(2).center().expand();
+        table.row();
+        table.add(labelName).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.add(textField).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.row();
+        table.add(labelSpecialty).width(stage.getWidth() / 3f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.add(selectBox).width(stage.getWidth() / 2f).height(stage.getHeight() / 9f).
+                pad(20).expandX();
+        table.row();
+        table.add(buttonOK).colspan(2).center().expand();
     }
 
     @Override
     public void show() {
+
         //Adding Actors on stage
         stage.addActor(table);
-        stage.addActor(okButton);
 
         //Debugging position of table
 //        table.setDebug(true);
@@ -138,16 +155,15 @@ public class LoginScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        //Drawing all graphic elements (without actors)
-        stage.getBatch().begin();
-        stage.getBatch().draw(game.getBackground(), 0, 0);
-        stage.getBatch().end();
 
-        //Drawing actors
-        stage.draw();
+        //Setting background color #445565
+        Utils.setBackgroundColor(68/255f, 85/255f, 101/255f, 1);
 
         //Updating of graphic elements
         stage.act(delta);
+
+        //Drawing actors
+        stage.draw();
     }
 
     @Override
@@ -172,6 +188,12 @@ public class LoginScreen implements Screen {
 
     @Override
     public void dispose() {
+
         stage.dispose();
+        font.dispose();
+        textureData.texture1.getRegion().getTexture().dispose();
+        textureData.texture2.getRegion().getTexture().dispose();
+        textureData.pixmap1.dispose();
+        textureData.pixmap2.dispose();
     }
 }
